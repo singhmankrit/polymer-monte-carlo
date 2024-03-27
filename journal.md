@@ -25,13 +25,12 @@ You will find how to include [links](https://docs.gitlab.com/ee/user/markdown.ht
 [images](https://docs.gitlab.com/ee/user/markdown.html#images) particularly.
 
 ## Week 1
-(due 18 April 2022, 23:59)
+(due 22 April 2024, 23:59)
 
 
 ## Week 2
-(due 25 April 2022, 23:59)
+(due 29 April 2024, 23:59)
 
 
 ## Week 3
-(due 2 May 2022, 23:59)
-
+(due 6 May 2024, 23:59)
