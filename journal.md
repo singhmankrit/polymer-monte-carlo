@@ -9,7 +9,7 @@ Every week you should
 1. write down **on the day of the lecture** a short plan (bullet list is sufficient) of how you want to 
    reach the weekly milestones. Think about how to distribute work in the group, 
    what pieces of code functionality need to be implemented.
-2. write about your progress **until Monday, 23:59** before the next lecture with respect to the milestones.
+2. write about your progress **until Tuesday, 11:00** before the next lecture with respect to the milestones.
    Substantiate your progress with links to code, pictures or test results. Reflect on the
    relation to your original plan.
 
@@ -25,12 +25,17 @@ You will find how to include [links](https://docs.gitlab.com/ee/user/markdown.ht
 [images](https://docs.gitlab.com/ee/user/markdown.html#images) particularly.
 
 ## Week 1
-(due 22 April 2024, 23:59)
+(due 22 April 2025, 11:00)
 
 
 ## Week 2
-(due 29 April 2024, 23:59)
+(due 29 April 2025, 11:00)
 
 
 ## Week 3
-(due 6 May 2024, 23:59)
+(due 6 May 2025, 11:00)
+
+
+## Reminder final deadline
+
+The deadline for project 2 is **13 May 23:59**. By then, you must have uploaded the report to the repository, and the repository must contain the latest version of the code.
