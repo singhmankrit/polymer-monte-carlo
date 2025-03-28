@@ -60,6 +60,9 @@ if __name__ == "__main__":
             do_step(chains[chain, :, :], weights[chain, :], alive[chain, :], step)
 
         # we use step+1 to get the L'
+        if (alive[:, step + 1] == False).all():
+            print(f"All chains died by step {step + 1}, skipping other steps")
+            break
         mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
         to_add = []
         pruned = 0
