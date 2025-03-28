@@ -53,6 +53,7 @@ if __name__ == "__main__":
     # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
     weights = np.zeros((amount_of_chains, target_length + 1), dtype="g")
     weights[:, 0] = 1
+    max_step = 1
 
     # TODO: iterate on the polymers using PERM instead of just Rosenbluth
     for step in tqdm(range(target_length)):
@@ -96,7 +97,7 @@ if __name__ == "__main__":
             [alive] + [np.expand_dims(alive[chain, :], 0) for chain in to_add], axis=0
         )
         amount_of_chains = chains.shape[0]
-    # TODO: calculate end to end distances
+        max_step += 1
 
     # TODO: calculate gyrations
 
