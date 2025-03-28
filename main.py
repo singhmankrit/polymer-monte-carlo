@@ -2,6 +2,7 @@
 from random import choice, random
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.optimize as opt
 import logging
 from tqdm import trange
 from tqdm.contrib.logging import logging_redirect_tqdm
@@ -124,6 +125,35 @@ def grow_polymers(
     return max_step, chains.shape[0], chains, alive, weights
 
 
+def growth_model(L, A):
+    return A * L ** (3 / 2)
+
+
+def plot_gyration(lengths, weighted_gyrations):
+    fig, ax = plt.subplots()
+
+    ax.set_title("Length dependent radius of Gyration")
+    ax.set_xlabel(r"length ($\sigma$)")
+    ax.set_ylabel(r"Radius of Gyration ($\sigma$)")
+    ax.plot(lengths, weighted_gyrations, label="gyration")
+    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_gyrations)
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths ** (3 / 2),
+        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+    )
+
+    ax_right = ax.twinx()
+    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_yscale("log")
+    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
+
+    ax.legend()
+
+    plt.tight_layout()
+    fig.savefig("gyration.png")
+
+
 if __name__ == "__main__":
     # TODO: parse configuration
     amount_of_chains = 300
@@ -187,35 +217,29 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
     lengths = np.arange(0, max_step)
 
-    ax.set_xlabel("L (N)")
-    ax.set_ylabel("end to end dist^2")
-    ax.plot(lengths, weighted_end_to_end)
-    ax.plot(lengths, lengths ** (3 / 2))
+    ax.set_title("Length dependent end-to-end distance")
+    ax.set_xlabel(r"L ($\sigma$)")
+    ax.set_ylabel(r"end to end dist ($\sigma^2$)")
+    ax.plot(lengths, weighted_end_to_end, label="end-to-end")
+    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_end_to_end)
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths ** (3 / 2),
+        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+    )
 
     ax_right = ax.twinx()
     ax_right.set_ylabel("amount of polymers")
     ax_right.set_yscale("log")
     ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
 
-    plt.show()
+    ax.legend()
+
+    plt.tight_layout()
+    fig.savefig("end_to_end.png")
 
     weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
-
-    fig, ax = plt.subplots()
     lengths = np.arange(0, max_step)
-
-    ax.set_xlabel("L (N)")
-    ax.set_ylabel("Gyration")
-    ax.plot(lengths, weighted_gyrations)
-    ax.plot(lengths, 0.1 * lengths ** (3 / 2))
-
-    ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
-    ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
-
-    plt.show()
-
-    # TODO: visualize things
+    plot_gyration(lengths, weighted_gyrations)
