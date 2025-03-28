@@ -211,4 +211,19 @@ if __name__ == "__main__":
         weights[:, :max_step], axis=0
     )
 
+    fig, ax = plt.subplots()
+    lengths = np.arange(0, max_step)
+
+    ax.set_xlabel("L (N)")
+    ax.set_ylabel("Gyration")
+    ax.plot(lengths, weighted_gyrations)
+    ax.plot(lengths, 0.1 * lengths ** (3 / 2))
+
+    ax_right = ax.twinx()
+    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_yscale("log")
+    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
+
+    plt.show()
+
     # TODO: visualize things
