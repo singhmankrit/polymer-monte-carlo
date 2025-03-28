@@ -206,7 +206,6 @@ if __name__ == "__main__":
 
     plt.show()
 
-    # TODO: calculate gyrations
     weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
