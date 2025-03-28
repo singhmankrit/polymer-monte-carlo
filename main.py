@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from random import choice, random
 import numpy as np
+from tqdm import tqdm
 
 
 def get_allowed_sides(chain, step):
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     weights[:, 0] = 1
 
     # TODO: iterate on the polymers using PERM instead of just Rosenbluth
-    for step in range(target_length):
+    for step in tqdm(range(target_length)):
         for chain in range(amount_of_chains):
             do_step(chains[chain, :, :], weights[chain, :], alive[chain, :], step)
 
