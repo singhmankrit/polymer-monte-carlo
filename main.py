@@ -56,7 +56,6 @@ if __name__ == "__main__":
     weights[:, 0] = 1
     max_step = 1
 
-    # TODO: iterate on the polymers using PERM instead of just Rosenbluth
     for step in tqdm(range(target_length)):
         for chain in range(amount_of_chains):
             do_step(chains[chain, :, :], weights[chain, :], alive[chain, :], step)
