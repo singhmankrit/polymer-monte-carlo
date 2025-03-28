@@ -154,6 +154,31 @@ def plot_gyration(lengths, weighted_gyrations):
     fig.savefig("gyration.png")
 
 
+def plot_end_to_end(lengths, weighted_end_to_end):
+    fig, ax = plt.subplots()
+
+    ax.set_title("Length dependent end-to-end distance")
+    ax.set_xlabel(r"L ($\sigma$)")
+    ax.set_ylabel(r"end to end dist ($\sigma^2$)")
+    ax.plot(lengths, weighted_end_to_end, label="end-to-end")
+    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_end_to_end)
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths ** (3 / 2),
+        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+    )
+
+    ax_right = ax.twinx()
+    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_yscale("log")
+    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
+
+    ax.legend()
+
+    plt.tight_layout()
+    fig.savefig("end_to_end.png")
+
+
 if __name__ == "__main__":
     # TODO: parse configuration
     amount_of_chains = 300
@@ -210,36 +235,13 @@ if __name__ == "__main__":
         )
         gyrations[chain, alive[chain, :max_step]] = waa[alive[chain, :max_step]]
 
+    lengths = np.arange(0, max_step)
     weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
-
-    fig, ax = plt.subplots()
-    lengths = np.arange(0, max_step)
-
-    ax.set_title("Length dependent end-to-end distance")
-    ax.set_xlabel(r"L ($\sigma$)")
-    ax.set_ylabel(r"end to end dist ($\sigma^2$)")
-    ax.plot(lengths, weighted_end_to_end, label="end-to-end")
-    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_end_to_end)
-    ax.plot(
-        lengths,
-        opt_params[0] * lengths ** (3 / 2),
-        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
-    )
-
-    ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
-    ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
-
-    ax.legend()
-
-    plt.tight_layout()
-    fig.savefig("end_to_end.png")
+    plot_end_to_end(lengths, weighted_end_to_end)
 
     weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
-    lengths = np.arange(0, max_step)
     plot_gyration(lengths, weighted_gyrations)
