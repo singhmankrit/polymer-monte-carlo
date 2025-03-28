@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # keeps track of whether to keep growing a specific chain or not and the timesteps
     alive = np.tile(True, (amount_of_chains, target_length))
     # weight for each sub-length L for each of the chains
-    # uses the long double datatype 'g' to allow for the big number that may appear
+    # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
     weights = np.zeros((amount_of_chains, target_length), dtype="g")
     weights[:, 0] = 1
 
