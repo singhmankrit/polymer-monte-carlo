@@ -42,8 +42,9 @@
                 ppkgs.tqdm
                 # for nicely displaying results
                 ppkgs.tabulate
-                #for profiling
+                # for profiling and testing
                 pyflame
+                ppkgs.pytest
               ]))
               ffmpeg-headless # needed to make the animations
               mpv # for watching the generated videos
