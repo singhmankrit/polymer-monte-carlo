@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from random import choice, random
 import numpy as np
+import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
@@ -112,6 +113,22 @@ if __name__ == "__main__":
     weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
+
+    fig, ax = plt.subplots()
+    lengths = np.arange(0, max_step)
+
+    ax.set_xlabel("L (N)")
+    ax.set_ylabel("end to end dist^2")
+    ax.plot(lengths, weighted_end_to_end)
+    ax.plot(lengths, lengths ** (3 / 2))
+
+    ax_right = ax.twinx()
+    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_yscale("log")
+    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
+
+    plt.show()
+
     # TODO: calculate gyrations
 
     # TODO: visualize things
