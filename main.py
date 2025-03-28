@@ -99,6 +99,19 @@ if __name__ == "__main__":
         amount_of_chains = chains.shape[0]
         max_step += 1
 
+    print(max_step, amount_of_chains)
+    end_to_ends = np.zeros((amount_of_chains, max_step))
+    for chain in range(amount_of_chains):
+        start = chains[chain, 0, :]
+        end = chains[chain, :, :]
+        diff = end - start
+        end_to_ends[chain, alive[chain, :max_step]] = np.vecdot(diff, diff)[
+            alive[chain]
+        ]
+
+    weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
+        weights[:, :max_step], axis=0
+    )
     # TODO: calculate gyrations
 
     # TODO: visualize things
