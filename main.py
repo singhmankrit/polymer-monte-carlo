@@ -222,7 +222,7 @@ if __name__ == "__main__":
     print(max_step, amount_of_chains)
     end_to_ends = np.zeros((amount_of_chains, max_step))
     gyrations = np.zeros((amount_of_chains, max_step))
-    for chain in range(amount_of_chains):
+    for chain in tqdm(range(amount_of_chains)):
         start = chains[chain, 0, :]
         end = chains[chain, :, :]
         diff = end - start
