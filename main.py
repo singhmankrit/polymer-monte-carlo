@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-def get_allowed_sides(chain, step):
+def get_allowed_sides_2d(chain, step):
     current_position = chain[step, :]
     if step == 0:
         return [
@@ -26,10 +26,10 @@ def get_allowed_sides(chain, step):
     ]
 
 
-def do_step(chain, weight, alive, step):
+def do_step(chain, weight, alive, step, next_sites_function):
     if not alive[step]:
         return
-    allowed_sides = get_allowed_sides(chain, step)
+    allowed_sides = next_sites_function(chain, step)
     l = len(allowed_sides)
     if l > 0:
         next = choice(allowed_sides)
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     target_length = 1000
     w_low = 1 / np.sqrt(10)
     w_high = np.sqrt(10)
+    next_sides_function = get_allowed_sides_2d
 
     # allow for all three coordinates up to the max length for each chain
     chains = np.zeros((amount_of_chains, target_length + 1, 2))
@@ -58,7 +59,13 @@ if __name__ == "__main__":
 
     for step in tqdm(range(target_length)):
         for chain in range(amount_of_chains):
-            do_step(chains[chain, :, :], weights[chain, :], alive[chain, :], step)
+            do_step(
+                chains[chain, :, :],
+                weights[chain, :],
+                alive[chain, :],
+                step,
+                next_sides_function,
+            )
 
         # we use step+1 to get the L'
         if (alive[:, step + 1] == False).all():
