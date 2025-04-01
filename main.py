@@ -15,10 +15,12 @@ def get_allowed_sides_2d(chain, step):
     return [
         new_position
         for new_position in [
-            current_position + np.array([1, 0]),
-            current_position + np.array([-1, 0]),
-            current_position + np.array([0, 1]),
-            current_position + np.array([0, -1]),
+            current_position + np.array([1, 0, 0]),
+            current_position + np.array([-1, 0, 0]),
+            current_position + np.array([0, 1, 0]),
+            current_position + np.array([0, -1, 0]),
+            current_position + np.array([0, 0, 1]),
+            current_position + np.array([0, 0, -1]),
         ]
         if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
     ]
