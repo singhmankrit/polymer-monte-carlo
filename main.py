@@ -57,7 +57,8 @@ def init_polymer_storage(amount_of_chains, target_length, dimension):
     return chains, alive, weights
 
 
-def perm_step(chains, weights, alive, step, amount_of_chains):
+def perm_step(chains, weights, alive, step, amount_of_chains, perm_weights):
+    w_low, w_high = perm_weights
     mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
     to_add = []  # keep track of what polymers got duplicated
     pruned = 0  # keep track of how many polymers got pruned this step
@@ -95,7 +96,12 @@ def perm_step(chains, weights, alive, step, amount_of_chains):
 
 
 def grow_polymers(
-    amount_of_chains, target_length, dimension, next_sides_function, do_perm=True
+    amount_of_chains,
+    target_length,
+    dimension,
+    next_sides_function,
+    do_perm,
+    perm_weights,
 ):
     chains, alive, weights = init_polymer_storage(
         amount_of_chains, target_length, dimension
@@ -118,7 +124,7 @@ def grow_polymers(
                 break
             if do_perm:
                 chains, weights, alive = perm_step(
-                    chains, weights, alive, step, amount_of_chains
+                    chains, weights, alive, step, amount_of_chains, perm_weights
                 )
             amount_of_chains = chains.shape[0]
             max_step += 1
@@ -131,6 +137,7 @@ if __name__ == "__main__":
     target_length = 1000
     w_low = 1 / np.sqrt(10)
     w_high = np.sqrt(10)
+    do_perm = True
     dimension = 2
     next_sides_function = get_allowed_sides_2d
     assert next_sides_function != get_allowed_sides_2d or dimension == 2
@@ -138,7 +145,12 @@ if __name__ == "__main__":
     # assert next_sides_function != get_allowed_sides_3d or dimension == 3
 
     max_step, amount_of_chains, chains, alive, weights = grow_polymers(
-        amount_of_chains, target_length, dimension, next_sides_function
+        amount_of_chains,
+        target_length,
+        dimension,
+        next_sides_function,
+        do_perm,
+        (w_low, w_high),
     )
 
     print(max_step, amount_of_chains)
