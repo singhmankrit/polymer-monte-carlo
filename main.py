@@ -131,6 +131,10 @@ def growth_model(L, A):
     return A * L ** (3 / 2)
 
 
+def growth_model_3(L, A):
+    return A * L ** (6 / 5)
+
+
 def plot_gyration(lengths, weighted_gyrations):
     fig, ax = plt.subplots()
 
@@ -143,6 +147,12 @@ def plot_gyration(lengths, weighted_gyrations):
         lengths,
         opt_params[0] * lengths ** (3 / 2),
         label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+    )
+    opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_gyrations)
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths ** (6 / 5),
+        label=f"${opt_params[0]:.03f} L^{{6/5}}$",
     )
 
     ax_right = ax.twinx()
@@ -168,6 +178,12 @@ def plot_end_to_end(lengths, weighted_end_to_end):
         lengths,
         opt_params[0] * lengths ** (3 / 2),
         label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+    )
+    opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_end_to_end)
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths ** (6 / 5),
+        label=f"${opt_params[0]:.03f} L^{{6/5}}$",
     )
 
     ax_right = ax.twinx()
