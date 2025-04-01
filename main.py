@@ -45,10 +45,11 @@ if __name__ == "__main__":
     target_length = 1000
     w_low = 1 / np.sqrt(10)
     w_high = np.sqrt(10)
+    dimension = 2
     next_sides_function = get_allowed_sides_2d
 
     # allow for all three coordinates up to the max length for each chain
-    chains = np.zeros((amount_of_chains, target_length + 1, 2))
+    chains = np.zeros((amount_of_chains, target_length + 1, dimension))
     # keeps track of whether to keep growing a specific chain or not and the timesteps
     alive = np.tile(True, (amount_of_chains, target_length + 1))
     # weight for each sub-length L for each of the chains
