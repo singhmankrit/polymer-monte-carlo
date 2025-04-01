@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from random import choice, random
+from typing import Callable
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.typing import NDArray
 import scipy.optimize as opt
 import logging
 from tqdm import trange
@@ -10,7 +12,9 @@ from tqdm.contrib.logging import logging_redirect_tqdm
 LOG = logging.getLogger(__name__)
 
 
-def get_allowed_sides_2d(chain, step):
+def get_allowed_sides_2d(
+    chain: NDArray[np.float64], step: int
+) -> list[NDArray[np.float64]]:
     current_position = chain[step, :]
     return [
         new_position
@@ -24,7 +28,9 @@ def get_allowed_sides_2d(chain, step):
     ]
 
 
-def get_allowed_sides_2d_free(chain, step):
+def get_allowed_sides_2d_free(
+    chain: NDArray[np.float64], step: int
+) -> list[NDArray[np.float64]]:
     current_position = chain[step, :]
     return [
         current_position + np.array([1, 0]),
@@ -34,7 +40,9 @@ def get_allowed_sides_2d_free(chain, step):
     ]
 
 
-def get_allowed_sides_3d(chain, step):
+def get_allowed_sides_3d(
+    chain: NDArray[np.float64], step: int
+) -> list[NDArray[np.float64]]:
     current_position = chain[step, :]
     return [
         new_position
@@ -50,7 +58,9 @@ def get_allowed_sides_3d(chain, step):
     ]
 
 
-def get_allowed_sides_3d_free(chain, step):
+def get_allowed_sides_3d_free(
+    chain: NDArray[np.float64], step: int
+) -> list[NDArray[np.float64]]:
     current_position = chain[step, :]
     return [
         current_position + np.array([1, 0, 0]),
@@ -62,20 +72,30 @@ def get_allowed_sides_3d_free(chain, step):
     ]
 
 
-def do_step(chain, weight, alive, step, next_sites_function):
+def do_step(
+    chain: NDArray[np.float64],
+    weight: NDArray[np.float128],
+    alive: NDArray[np.bool],
+    step: int,
+    next_sites_function: Callable[
+        [NDArray[np.float64], int], list[NDArray[np.float64]]
+    ],
+):
     if not alive[step]:
         return
     allowed_sides = next_sites_function(chain, step)
-    l = len(allowed_sides)
-    if l > 0:
+    amount_of_allowed_sides = len(allowed_sides)
+    if amount_of_allowed_sides > 0:
         next = choice(allowed_sides)
         chain[step + 1, :] = next
-        weight[step + 1] = weight[step] * l
+        weight[step + 1] = weight[step] * amount_of_allowed_sides
     else:
         alive[step + 1 :] = False
 
 
-def init_polymer_storage(amount_of_chains, target_length, dimension):
+def init_polymer_storage(
+    amount_of_chains: int, target_length: int, dimension: int
+) -> tuple[NDArray[np.float64], NDArray[np.float128], NDArray[np.bool]]:
     # since we want length L we'll have L+1 points
     target_length += 1
     # allow for all three coordinates up to the max length for each chain
@@ -86,13 +106,20 @@ def init_polymer_storage(amount_of_chains, target_length, dimension):
     # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
     weights = np.zeros((amount_of_chains, target_length), dtype="g")
     weights[:, 0] = 1
-    return chains, alive, weights
+    return chains, weights, alive
 
 
-def perm_step(chains, weights, alive, step, amount_of_chains, perm_weights):
+def perm_step(
+    chains: NDArray[np.float64],
+    weights: NDArray[np.float128],
+    alive: NDArray[np.bool],
+    step: int,
+    amount_of_chains: int,
+    perm_weights: tuple[float, float],
+):
     w_low, w_high = perm_weights
     mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
-    to_add = []  # keep track of what polymers got duplicated
+    to_add: list[int] = []  # keep track of what polymers got duplicated
     pruned = 0  # keep track of how many polymers got pruned this step
     for chain in range(amount_of_chains):
         if not alive[chain, step + 1]:
@@ -128,14 +155,16 @@ def perm_step(chains, weights, alive, step, amount_of_chains, perm_weights):
 
 
 def grow_polymers(
-    amount_of_chains,
-    target_length,
-    dimension,
-    next_sides_function,
-    do_perm,
-    perm_weights,
+    amount_of_chains: int,
+    target_length: int,
+    dimension: int,
+    next_sides_function: Callable[
+        [NDArray[np.float64], int], list[NDArray[np.float64]]
+    ],
+    do_perm: bool,
+    perm_weights: tuple[float, float],
 ):
-    chains, alive, weights = init_polymer_storage(
+    chains, weights, alive = init_polymer_storage(
         amount_of_chains, target_length, dimension
     )
     with logging_redirect_tqdm():
@@ -151,7 +180,7 @@ def grow_polymers(
                 )
 
             # we use step+1 to get the L'
-            if (alive[:, step + 1] == False).all():
+            if not alive[:, step + 1]:
                 LOG.warning(f"All chains died by step {step + 1}, skipping other steps")
                 break
             if do_perm:
@@ -171,7 +200,7 @@ def growth_model_3(L, A):
     return A * L ** (6 / 5)
 
 
-def plot_gyration(lengths, weighted_gyrations):
+def plot_gyration(lengths: NDArray[np.int64], weighted_gyrations: NDArray[np.float64]):
     fig, ax = plt.subplots()
 
     ax.set_title("Length dependent radius of Gyration")
@@ -202,7 +231,9 @@ def plot_gyration(lengths, weighted_gyrations):
     fig.savefig("gyration.png")
 
 
-def plot_end_to_end(lengths, weighted_end_to_end):
+def plot_end_to_end(
+    lengths: NDArray[np.int64], weighted_end_to_end: NDArray[np.float64]
+):
     fig, ax = plt.subplots()
 
     ax.set_title("Length dependent end-to-end distance")
@@ -237,9 +268,9 @@ if __name__ == "__main__":
     # TODO: parse configuration
     amount_of_chains = 300
     target_length = 1000
-    w_low = 1 / np.sqrt(10)
-    w_high = np.sqrt(10)
-    do_perm = True
+    w_low: float = 1 / np.sqrt(10)
+    w_high: float = np.sqrt(10)
+    do_perm = False
     dimension = 2
     next_sides_function = get_allowed_sides_2d
     assert next_sides_function != get_allowed_sides_2d or dimension == 2
