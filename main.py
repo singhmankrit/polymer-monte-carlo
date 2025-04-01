@@ -43,10 +43,20 @@ def do_step(chain, weight, alive, step, next_sites_function):
         alive[step + 1 :] = False
 
 
-def grow_polymers(chains, alive, weights, amount_of_chains, next_sides_function):
+def grow_polymers(amount_of_chains, target_length, dimension, next_sides_function):
+    # since we want length L we'll have L+1 points
+    target_length += 1
+    # allow for all three coordinates up to the max length for each chain
+    chains = np.zeros((amount_of_chains, target_length, dimension))
+    # keeps track of whether to keep growing a specific chain or not and the timesteps
+    alive = np.tile(True, (amount_of_chains, target_length))
+    # weight for each sub-length L for each of the chains
+    # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
+    weights = np.zeros((amount_of_chains, target_length), dtype="g")
+    weights[:, 0] = 1
     with logging_redirect_tqdm():
-        max_step = 1
-        for step in trange(target_length):
+        max_step = 1  # we start at 1 point existing (the start)
+        for step in trange(target_length - 1):
             for chain in range(amount_of_chains):
                 do_step(
                     chains[chain, :, :],
@@ -109,17 +119,8 @@ if __name__ == "__main__":
     # example for other assertions to enforce the correct dimension for next_sides_function
     # assert next_sides_function != get_allowed_sides_3d or dimension == 3
 
-    # allow for all three coordinates up to the max length for each chain
-    chains = np.zeros((amount_of_chains, target_length + 1, dimension))
-    # keeps track of whether to keep growing a specific chain or not and the timesteps
-    alive = np.tile(True, (amount_of_chains, target_length + 1))
-    # weight for each sub-length L for each of the chains
-    # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
-    weights = np.zeros((amount_of_chains, target_length + 1), dtype="g")
-    weights[:, 0] = 1
-
     max_step, amount_of_chains, chains, alive, weights = grow_polymers(
-        chains, alive, weights, amount_of_chains, next_sides_function
+        amount_of_chains, target_length, dimension, next_sides_function
     )
 
     print(max_step, amount_of_chains)
