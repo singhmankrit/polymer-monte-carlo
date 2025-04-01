@@ -94,15 +94,15 @@ if __name__ == "__main__":
                 weights[chain, step + 1] /= 2
                 to_add.append(chain)
         chains = np.concatenate(
-            [chains] + [np.expand_dims(chains[chain, :, :], 0) for chain in to_add],
+            [chains] + [chains[np.newaxis, chain, :, :] for chain in to_add],
             axis=0,
         )
         weights = np.concatenate(
-            [weights] + [np.expand_dims(weights[chain, :], 0) for chain in to_add],
+            [weights] + [weights[np.newaxis, chain, :] for chain in to_add],
             axis=0,
         )
         alive = np.concatenate(
-            [alive] + [np.expand_dims(alive[chain, :], 0) for chain in to_add], axis=0
+            [alive] + [alive[np.newaxis, chain, :] for chain in to_add], axis=0
         )
         amount_of_chains = chains.shape[0]
         max_step += 1
