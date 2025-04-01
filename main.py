@@ -105,6 +105,9 @@ if __name__ == "__main__":
     w_high = np.sqrt(10)
     dimension = 2
     next_sides_function = get_allowed_sides_2d
+    assert next_sides_function != get_allowed_sides_2d or dimension == 2
+    # example for other assertions to enforce the correct dimension for next_sides_function
+    # assert next_sides_function != get_allowed_sides_3d or dimension == 3
 
     # allow for all three coordinates up to the max length for each chain
     chains = np.zeros((amount_of_chains, target_length + 1, dimension))
