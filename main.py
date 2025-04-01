@@ -43,7 +43,7 @@ def do_step(chain, weight, alive, step, next_sites_function):
         alive[step + 1 :] = False
 
 
-def grow_polymers(amount_of_chains, target_length, dimension, next_sides_function):
+def init_polymer_storage(amount_of_chains, target_length, dimension):
     # since we want length L we'll have L+1 points
     target_length += 1
     # allow for all three coordinates up to the max length for each chain
@@ -54,9 +54,55 @@ def grow_polymers(amount_of_chains, target_length, dimension, next_sides_functio
     # uses the long double datatype 'g' (probably an 80 bit float) to allow for the big numbers that may appear
     weights = np.zeros((amount_of_chains, target_length), dtype="g")
     weights[:, 0] = 1
+    return chains, alive, weights
+
+
+def perm_step(chains, weights, alive, step, amount_of_chains):
+    mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
+    to_add = []  # keep track of what polymers got duplicated
+    pruned = 0  # keep track of how many polymers got pruned this step
+    for chain in range(amount_of_chains):
+        if not alive[chain, step + 1]:
+            continue
+        # Pruning
+        if weights[chain, step + 1] < w_low * mean_weight:
+            if random() < 0.5:
+                pruned += 1
+                # don't grow this chain anymore
+                alive[chain, step + 1] = False
+                # discard the weight at length L'
+                weights[chain, step + 1] = 0
+            else:
+                # double the weight from L' onwards
+                weights[chain, step + 1] *= 2
+        # Enrichment
+        elif weights[chain, step + 1] > w_high * mean_weight:
+            weights[chain, step + 1] /= 2
+            to_add.append(chain)
+    chains = np.concatenate(
+        [chains] + [chains[np.newaxis, chain, :, :] for chain in to_add],
+        axis=0,
+    )
+    weights = np.concatenate(
+        [weights] + [weights[np.newaxis, chain, :] for chain in to_add],
+        axis=0,
+    )
+    alive = np.concatenate(
+        [alive] + [alive[np.newaxis, chain, :] for chain in to_add],
+        axis=0,
+    )
+    return chains, weights, alive
+
+
+def grow_polymers(
+    amount_of_chains, target_length, dimension, next_sides_function, do_perm=True
+):
+    chains, alive, weights = init_polymer_storage(
+        amount_of_chains, target_length, dimension
+    )
     with logging_redirect_tqdm():
         max_step = 1  # we start at 1 point existing (the start)
-        for step in trange(target_length - 1):
+        for step in trange(target_length):
             for chain in range(amount_of_chains):
                 do_step(
                     chains[chain, :, :],
@@ -70,38 +116,10 @@ def grow_polymers(amount_of_chains, target_length, dimension, next_sides_functio
             if (alive[:, step + 1] == False).all():
                 LOG.warning(f"All chains died by step {step + 1}, skipping other steps")
                 break
-            mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
-            to_add = []
-            pruned = 0
-            for chain in range(amount_of_chains):
-                if not alive[chain, step + 1]:
-                    continue
-                # Pruning
-                if weights[chain, step + 1] < w_low * mean_weight:
-                    if random() < 0.5:
-                        pruned += 1
-                        # don't grow this chain anymore
-                        alive[chain, step + 1] = False
-                        # discard the weight at length L'
-                        weights[chain, step + 1] = 0
-                    else:
-                        weights[chain, step + 1] *= 2
-                # Enrichment
-                elif weights[chain, step + 1] > w_high * mean_weight:
-                    # TODO: double and half weight
-                    weights[chain, step + 1] /= 2
-                    to_add.append(chain)
-            chains = np.concatenate(
-                [chains] + [chains[np.newaxis, chain, :, :] for chain in to_add],
-                axis=0,
-            )
-            weights = np.concatenate(
-                [weights] + [weights[np.newaxis, chain, :] for chain in to_add],
-                axis=0,
-            )
-            alive = np.concatenate(
-                [alive] + [alive[np.newaxis, chain, :] for chain in to_add], axis=0
-            )
+            if do_perm:
+                chains, weights, alive = perm_step(
+                    chains, weights, alive, step, amount_of_chains
+                )
             amount_of_chains = chains.shape[0]
             max_step += 1
     return max_step, chains.shape[0], chains, alive, weights
