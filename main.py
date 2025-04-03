@@ -7,13 +7,6 @@ from tqdm import tqdm
 
 def get_allowed_sides(chain, step):
     current_position = chain[step, :]
-    if step == 0:
-        return [
-            current_position + np.array([1, 0]),
-            current_position + np.array([-1, 0]),
-            current_position + np.array([0, 1]),
-            current_position + np.array([0, -1]),
-        ]
     return [
         new_position
         for new_position in [
@@ -22,7 +15,7 @@ def get_allowed_sides(chain, step):
             current_position + np.array([0, 1]),
             current_position + np.array([0, -1]),
         ]
-        if not (chain[:step] == new_position).all(axis=1).any()
+        if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
     ]
 
 
