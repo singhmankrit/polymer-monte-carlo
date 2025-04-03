@@ -56,7 +56,6 @@ if __name__ == "__main__":
     weights[:, 0] = 1
     max_step = 1
 
-    # TODO: iterate on the polymers using PERM instead of just Rosenbluth
     for step in tqdm(range(target_length)):
         for chain in range(amount_of_chains):
             do_step(chains[chain, :, :], weights[chain, :], alive[chain, :], step)
@@ -102,6 +101,7 @@ if __name__ == "__main__":
 
     print(max_step, amount_of_chains)
     end_to_ends = np.zeros((amount_of_chains, max_step))
+    gyrations = np.zeros((amount_of_chains, max_step))
     for chain in range(amount_of_chains):
         start = chains[chain, 0, :]
         end = chains[chain, :, :]
@@ -109,6 +109,29 @@ if __name__ == "__main__":
         end_to_ends[chain, alive[chain, :max_step]] = np.vecdot(diff, diff)[
             alive[chain]
         ]
+
+        # the middle point (coordinates axis 1) up to length (axis 0)
+        center = np.array(
+            [
+                np.sum(chains[chain, :length, :], axis=0, keepdims=True) / length
+                for length in range(1, max_step + 1)
+            ]
+        )
+        # differences from center (coordinates axis 2, length axis 1, particle axis 0)
+        cdiffs = np.array(
+            [chains[chain, length, :] - center for length in range(0, max_step)]
+        )[:, :, 0, :]
+
+        # distance per length (axis 1), per particle (axis 0)
+        clens = np.sum(cdiffs * cdiffs, axis=-1)
+        # this can probably be done better (using masking or triu maybe) but works for now
+        waa = np.array(
+            [
+                np.sum(clens[: length + 1, length]) / (length + 1)
+                for length in range(0, max_step)
+            ]
+        )
+        gyrations[chain, alive[chain, :max_step]] = waa[alive[chain, :max_step]]
 
     weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
@@ -129,6 +152,23 @@ if __name__ == "__main__":
 
     plt.show()
 
-    # TODO: calculate gyrations
+    weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
+        weights[:, :max_step], axis=0
+    )
+
+    fig, ax = plt.subplots()
+    lengths = np.arange(0, max_step)
+
+    ax.set_xlabel("L (N)")
+    ax.set_ylabel("Gyration")
+    ax.plot(lengths, weighted_gyrations)
+    ax.plot(lengths, 0.1 * lengths ** (3 / 2))
+
+    ax_right = ax.twinx()
+    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_yscale("log")
+    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0))
+
+    plt.show()
 
     # TODO: visualize things
