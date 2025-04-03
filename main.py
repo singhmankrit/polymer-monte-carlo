@@ -74,7 +74,7 @@ def get_allowed_sides_3d_free(
 
 def do_step(
     chain: NDArray[np.float64],
-    weight: NDArray[np.float128],
+    weight: NDArray[np.longdouble],
     alive: NDArray[np.bool],
     step: int,
     next_sites_function: Callable[
@@ -95,7 +95,7 @@ def do_step(
 
 def init_polymer_storage(
     amount_of_chains: int, target_length: int, dimension: int
-) -> tuple[NDArray[np.float64], NDArray[np.float128], NDArray[np.bool]]:
+) -> tuple[NDArray[np.float64], NDArray[np.longdouble], NDArray[np.bool]]:
     # since we want length L we'll have L+1 points
     target_length += 1
     # allow for all three coordinates up to the max length for each chain
@@ -111,7 +111,7 @@ def init_polymer_storage(
 
 def perm_step(
     chains: NDArray[np.float64],
-    weights: NDArray[np.float128],
+    weights: NDArray[np.longdouble],
     alive: NDArray[np.bool],
     step: int,
     amount_of_chains: int,
