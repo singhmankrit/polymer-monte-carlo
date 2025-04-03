@@ -175,7 +175,7 @@ def plot_gyration(lengths, weighted_gyrations):
     fig, ax = plt.subplots()
 
     ax.set_title("Length dependent radius of Gyration")
-    ax.set_xlabel(r"length ($\sigma$)")
+    ax.set_xlabel(r"L ($\sigma$)")
     ax.set_ylabel(r"Radius of Gyration ($\sigma$)")
     ax.plot(lengths, weighted_gyrations, label="gyration")
     opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_gyrations)
