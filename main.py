@@ -180,7 +180,7 @@ def grow_polymers(
                 )
 
             # we use step+1 to get the L'
-            if not alive[:, step + 1]:
+            if not alive[:, step + 1].any():
                 LOG.warning(f"All chains died by step {step + 1}, skipping other steps")
                 break
             if do_perm:
