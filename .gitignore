@@ -1,5 +1,6 @@
 /.direnv
 __pycache__
+venv
 
 # ignore generated pictures and video's in the root directory
 /*.png
