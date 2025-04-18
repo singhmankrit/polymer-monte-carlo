@@ -200,25 +200,29 @@ def growth_model_3(L, A):
     return A * L ** (6 / 5)
 
 
-def plot_gyration(lengths: NDArray[np.int64], weighted_gyrations: NDArray[np.float64]):
+def plot_gyration(
+    lengths: NDArray[np.int64], weighted_gyrations: NDArray[np.float64], dim: int
+):
     fig, ax = plt.subplots()
 
     ax.set_title("Length dependent radius of Gyration")
     ax.set_xlabel(r"L ($\sigma$)")
     ax.set_ylabel(r"Radius of Gyration ($\sigma$)")
     ax.plot(lengths, weighted_gyrations, label="gyration")
-    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_gyrations)
-    ax.plot(
-        lengths,
-        opt_params[0] * lengths ** (3 / 2),
-        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
-    )
-    opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_gyrations)
-    ax.plot(
-        lengths,
-        opt_params[0] * lengths ** (6 / 5),
-        label=f"${opt_params[0]:.03f} L^{{6/5}}$",
-    )
+    if dim == 2:
+        opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_gyrations)
+        ax.plot(
+            lengths,
+            opt_params[0] * lengths ** (3 / 2),
+            label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+        )
+    elif dim == 3:
+        opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_gyrations)
+        ax.plot(
+            lengths,
+            opt_params[0] * lengths ** (6 / 5),
+            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+        )
 
     ax_right = ax.twinx()
     ax_right.set_ylabel("amount of polymers")
@@ -232,7 +236,7 @@ def plot_gyration(lengths: NDArray[np.int64], weighted_gyrations: NDArray[np.flo
 
 
 def plot_end_to_end(
-    lengths: NDArray[np.int64], weighted_end_to_end: NDArray[np.float64]
+    lengths: NDArray[np.int64], weighted_end_to_end: NDArray[np.float64], dim: int
 ):
     fig, ax = plt.subplots()
 
@@ -240,18 +244,20 @@ def plot_end_to_end(
     ax.set_xlabel(r"L ($\sigma$)")
     ax.set_ylabel(r"end to end dist ($\sigma^2$)")
     ax.plot(lengths, weighted_end_to_end, label="end-to-end")
-    opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_end_to_end)
-    ax.plot(
-        lengths,
-        opt_params[0] * lengths ** (3 / 2),
-        label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
-    )
-    opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_end_to_end)
-    ax.plot(
-        lengths,
-        opt_params[0] * lengths ** (6 / 5),
-        label=f"${opt_params[0]:.03f} L^{{6/5}}$",
-    )
+    if dim == 2:
+        opt_params, _ = opt.curve_fit(growth_model, lengths, weighted_end_to_end)
+        ax.plot(
+            lengths,
+            opt_params[0] * lengths ** (3 / 2),
+            label=f"${opt_params[0]:.03f} L^{{3 / 2}}$",
+        )
+    if dim == 3:
+        opt_params, _ = opt.curve_fit(growth_model_3, lengths, weighted_end_to_end)
+        ax.plot(
+            lengths,
+            opt_params[0] * lengths ** (6 / 5),
+            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+        )
 
     ax_right = ax.twinx()
     ax_right.set_ylabel("amount of polymers")
@@ -266,7 +272,7 @@ def plot_end_to_end(
 
 if __name__ == "__main__":
     # TODO: parse configuration
-    amount_of_chains = 300
+    amount_of_chains = 3000
     target_length = 1000
     w_low: float = 1 / np.sqrt(10)
     w_high: float = np.sqrt(10)
@@ -325,9 +331,9 @@ if __name__ == "__main__":
     weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
-    plot_end_to_end(lengths, weighted_end_to_end)
+    plot_end_to_end(lengths, weighted_end_to_end, dimension)
 
     weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
         weights[:, :max_step], axis=0
     )
-    plot_gyration(lengths, weighted_gyrations)
+    plot_gyration(lengths, weighted_gyrations, dimension)
