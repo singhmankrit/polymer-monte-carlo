@@ -27,6 +27,20 @@ You will find how to include [links](https://docs.gitlab.com/ee/user/markdown.ht
 ## Week 1
 (due 22 April 2025, 11:00)
 
+@npaarts
+
+I started creating a basic structure of the polymer simulation.
+After I finished doing that I continued with creating parts of the notes until I finally had enough.
+
+During this time we implemented the end-to-end distance as a function of length
+
+![](./journal/week1/end_to_end.png)
+
+And also the gyration
+
+![](./journal/week1/gyration.png)
+
+The code is already using numpy with pre-allocated arrays where possible so it's quite performant.
 
 ## Week 2
 (due 29 April 2025, 11:00)
