@@ -59,7 +59,7 @@ We are considering to look into the estimation(L$^{3/2}$) fitted by scipy and th
 I reviewed the code and was evaluating some possible extensions of the idea (maybe adding copolymers, A-B with different properties etc.) \
 Raised a Merge Request to refactor the code to make it more modular here: !8
 
-The weights used in the Rosebluth method depend on the number of available directions for the polymer to grow. With every new step we multiply the weight with the available directions, and by doing so we try to take into account the bias introduced by not equally weighing all possible paths.
+The weights used in the Rosebluth method depend on the number of available directions for the polymer to grow. With every new step we multiply the weight with the available directions, and by doing so we try to take into account the bias introduced by choosing only one of the many possible paths.
 
 
 ## Week 2
