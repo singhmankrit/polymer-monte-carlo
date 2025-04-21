@@ -42,6 +42,19 @@ And also the gyration
 
 The code is already using numpy with pre-allocated arrays where possible so it's quite performant.
 
+@rjuyal
+
+I reviewed the merge requests and added the errors(computed analytically) for the weighted averages graphs computed using Rosebluth method.
+
+![](./journal/week1/end_to_end_error.png)
+
+![](./journal/week1/gyration_error.png)
+
+At some point we no longer see errors. This is probably because at that point, there is only 1 chain and since the analytical error formula has a N-1 term in the denominator, we get divide by zero. This is expected since we cannot really compute standard deviation of a single entry.
+
+We are considering to look into the estimation(L$^{3/2}$) fitted by scipy and the errors associated with that as well.
+
+
 ## Week 2
 (due 29 April 2025, 11:00)
 
