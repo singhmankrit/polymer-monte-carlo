@@ -205,8 +205,8 @@ def analytical_error(
     N_temp, max_step = r2.shape
     N = np.sum(alive[:, :max_step], axis=0)
     r2_mean = np.sum(w * r2, axis=0) / np.sum(w, axis=0)
-    numerator = np.sum(w ** 2 * (r2 - r2_mean) ** 2, axis=0)
-    denominator = (np.sum(w, axis=0)) ** 2
+    numerator = np.sum((w/np.max(w)) ** 2 * (r2 - r2_mean) ** 2, axis=0)
+    denominator = (np.sum(w/np.max(w), axis=0)) ** 2
     error = np.sqrt((N / (N - 1)) * (numerator / denominator))
     return r2_mean, error
     
