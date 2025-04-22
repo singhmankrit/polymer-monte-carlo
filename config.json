@@ -1,0 +1,9 @@
+{
+	"amount_of_chains": 3000,
+	"target_length": 1000,
+	"do_perm": false,
+	"w_low": 0.316,
+	"w_high": 3.16,
+	"dimension": 2,
+	"next_sides_function": "simulate.get_allowed_sides_2d"
+}
