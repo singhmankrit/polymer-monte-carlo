@@ -4,6 +4,6 @@
 	"do_perm": false,
 	"w_low": 0.316,
 	"w_high": 3.16,
-	"dimension": 3,
-	"next_sides_function": "simulate.get_allowed_sides_3d"
+	"dimension": 2,
+	"next_sides_function": "simulate.get_allowed_sides_2d"
 }
