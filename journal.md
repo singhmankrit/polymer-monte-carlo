@@ -44,7 +44,7 @@ The code is already using numpy with pre-allocated arrays where possible so it's
 
 @rjuyal
 
-I reviewed the merge requests and added the errors(computed analytically) for the weighted averages graphs computed using Rosebluth method.
+I reviewed the merge requests and added the errors(computed analytically) for the weighted averages graphs computed using Rosebluth method for 2D polymers.
 
 ![](./journal/week1/end_to_end_error.png)
 
@@ -57,7 +57,7 @@ We are considering to look into the estimation(L$^{3/2}$) fitted by scipy and th
 @mankritsingh
 
 I reviewed the code and was evaluating some possible extensions of the idea (maybe adding copolymers, A-B with different properties etc.) \
-Raised a Merge Request to refactor the code to make it more modular here: !8
+Refactored the code to make it more modular here: !8
 
 The weights used in the Rosebluth method depend on the number of available directions for the polymer to grow. With every new step we multiply the weight with the available directions, and by doing so we try to take into account the bias introduced by choosing only one of the many possible paths.
 
