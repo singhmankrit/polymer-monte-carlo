@@ -47,11 +47,21 @@ def plot_gyration(
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_ylabel("number of polymers")
     ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0), color="gray", alpha=0.5)
+    ax_right.plot(
+        lengths,
+        np.sum(alive[:, :max_step], axis=0),
+        color="gray",
+        alpha=0.5,
+        label="number of polymers",
+    )
 
-    ax.legend()
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax_right.get_legend_handles_labels()
+    print(lines2, labels2)
+    ax.legend(lines + lines2, labels + labels2, loc=0)
+
     plt.tight_layout()
     fig.savefig("gyration.png")
     plt.close()
@@ -100,11 +110,21 @@ def plot_end_to_end(
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_ylabel("number of polymers")
     ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0), color="gray", alpha=0.5)
+    ax_right.plot(
+        lengths,
+        np.sum(alive[:, :max_step], axis=0),
+        color="gray",
+        alpha=0.5,
+        label="number of polymers",
+    )
 
-    ax.legend()
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax_right.get_legend_handles_labels()
+    print(lines2, labels2)
+    ax.legend(lines + lines2, labels + labels2, loc=0)
+
     plt.tight_layout()
     fig.savefig("end_to_end.png")
     plt.close()
