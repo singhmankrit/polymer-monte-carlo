@@ -77,12 +77,35 @@ The weights used in the Rosebluth method depend on the number of available direc
     - [ ] gyration produces correct numbers
     - [ ] next step functions produce correct next steps
     - [ ] perm removes/creates the correct polymers
-- [ ] decide what we're going to research @everyone
+- [x] decide what we're going to research @everyone
 - [x] add typehints where reasonable @npaarts (done in !11)
 - [x] add `amount of polymers` to the legend @npaarts (done in !10)
 - [x] change fit name to mention `fit` (and color) @npaarts (done in !10)
 - [x] default `do_perm = true` @npaarts (done in !9)
 - [ ] rename `mean_r2` and `error_r2` in `plot_end_to_end` and `plot_gyration` @mankritsingh
+
+### What we want to research
+
+options for what to do
+- compare PERM to the pivot algorithm.
+  - would need to find pivot implementation details
+- create animated chain creations for improved visualisation.
+  - trivial
+  - not enough on it's own
+- multiple simultaneous starting positions and their influence on observables.
+  - no idea yet if it's interesting
+  - needs major refactoring
+- calculating entropy / fractal dimension
+  - don't know how to go about it
+  - interesting if we find out
+- non-square lattice (like hexagons, or triangles)
+  - interesting
+  - needs some refactoring
+  - [useful site](https://www.redblobgames.com/grids/hexagons)
+
+From these points we have decided to start by implementing animations to use as a simple
+sanity check, after that we will continue by creating non-square lattices.
+If we have a lot of time after this, we will try to calculate the polymer entropy.
 
 ## Week 3
 (due 6 May 2025, 11:00)
