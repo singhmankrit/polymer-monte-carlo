@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import trange
 
+
 def find_observables(amount_of_chains, max_step, chains, alive):
     end_to_ends = np.zeros((amount_of_chains, max_step))
     gyrations = np.zeros((amount_of_chains, max_step))
@@ -27,12 +28,14 @@ def find_observables(amount_of_chains, max_step, chains, alive):
         # distance per length (axis 1), per particle (axis 0)
         clens = np.sum(cdiffs * cdiffs, axis=-1)
         # this can probably be done better (using masking or triu maybe) but works for now
-        waa = np.array(
+        tempgyrations = np.array(
             [
                 np.sum(clens[: length + 1, length]) / (length + 1)
                 for length in range(0, max_step)
             ]
         )
-        gyrations[chain, alive[chain, :max_step]] = waa[alive[chain, :max_step]]
+        gyrations[chain, alive[chain, :max_step]] = tempgyrations[
+            alive[chain, :max_step]
+        ]
     return end_to_ends, gyrations
-    
+
