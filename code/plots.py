@@ -35,14 +35,14 @@ def plot_gyration(
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"${opt_params[0]:.03f} L^{{3/2}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
         )
 
     # Show number of polymers on secondary y-axis
@@ -88,14 +88,14 @@ def plot_end_to_end(
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"${opt_params[0]:.03f} L^{{3/2}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
         )
 
     # Show number of polymers on secondary y-axis
