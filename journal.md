@@ -79,8 +79,8 @@ The weights used in the Rosebluth method depend on the number of available direc
     - [ ] perm removes/creates the correct polymers
 - [ ] decide what we're going to research @everyone
 - [ ] add typehints where reasonable @npaarts
-- [x] add `amount of polymers` to the legend @npaarts
-- [x] change fit name to mention `fit` (and color) @npaarts
+- [x] add `amount of polymers` to the legend @npaarts (done in !10)
+- [x] change fit name to mention `fit` (and color) @npaarts (done in !10)
 - [x] default `do_perm = true` @npaarts (done in !9)
 - [ ] rename `mean_r2` and `error_r2` in `plot_end_to_end` and `plot_gyration` @mankritsingh
 
