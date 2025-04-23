@@ -4,12 +4,36 @@ import importlib
 
 
 def resolve_function(fully_qualified_name: str):
+    """
+    Resolves a function from a string in the form 'module.submodule.function'
+
+    Parameters
+        fully_qualified_name (str): A string representing the name of the function
+
+    Returns
+        function: the function object corresponding with the name
+    """
     module_name, func_name = fully_qualified_name.rsplit(".", 1)
     module = importlib.import_module(f"code.{module_name}")
     return getattr(module, func_name)
 
 
 def parse_config(file_path: str):
+    """
+    Parses a config for the simulation in json format, using default values for missing keys.
+
+    Parameters
+        file_path (str): A string of the path to the desired config file
+
+    Returns
+        int: the number of chains to start with
+        int: the maximum length of the polymers to grow
+        bool: whether to use PERM (True) or Rosenbluth (False)
+        float: the lower weight bound for PERM
+        float: the upper weight bound for PERM
+        int: the dimensionality of each point
+        function: the function to randomly sample the next allowed point for a polymer
+    """
     with open(file_path) as file:
         config: dict[str, Any] = json.load(file)
         amount_of_chains: int = config.get("amount_of_chains", 3000)

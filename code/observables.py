@@ -1,8 +1,27 @@
 import numpy as np
+from numpy.typing import NDArray
 from tqdm import trange
 
 
-def find_observables(amount_of_chains, max_step, chains, alive):
+def find_observables(
+    amount_of_chains: int,
+    max_step: int,
+    chains: NDArray[np.float64],
+    alive: NDArray[np.bool],
+) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+    """
+    Calculates the end-to-end distances and gyrations for all chains at every length they exist.
+
+    Parameters
+        amount_of_chains (int): how many chains are in the input
+        max_step (int): the size of the longest chain in the input
+        chains (ndarray): the 3D array containing the positions of each point of every chain
+        alive (ndarray): the 2D array containing whether each chain is "alive" at a certain length
+
+    Returns
+        ndarray(amount_of_chains, max_step): the end-to-end distance for each chain at each length (where it is alive)
+        ndarray(amount_of_chains, max_step): the gyration for each chain at each length (where it is alive)
+    """
     end_to_ends = np.zeros((amount_of_chains, max_step))
     gyrations = np.zeros((amount_of_chains, max_step))
     for chain in trange(amount_of_chains):

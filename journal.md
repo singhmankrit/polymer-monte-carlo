@@ -70,7 +70,7 @@ The weights used in the Rosebluth method depend on the number of available direc
 - [x] add configuration file @mankritsingh
 - [ ] use sigma for the opt fit @rjuyal
 - [ ] fix divide-by-zero error @mankritsingh
-- [ ] create docstrings @npaarts
+- [x] create docstrings @npaarts (done in !11)
 - [ ] verify correctness of 2d and 3d
   - [ ] unit tests @everyone
     - [ ] end-to-end produces correct numbers
@@ -78,7 +78,7 @@ The weights used in the Rosebluth method depend on the number of available direc
     - [ ] next step functions produce correct next steps
     - [ ] perm removes/creates the correct polymers
 - [ ] decide what we're going to research @everyone
-- [ ] add typehints where reasonable @npaarts
+- [x] add typehints where reasonable @npaarts (done in !11)
 - [x] add `amount of polymers` to the legend @npaarts (done in !10)
 - [x] change fit name to mention `fit` (and color) @npaarts (done in !10)
 - [x] default `do_perm = true` @npaarts (done in !9)
