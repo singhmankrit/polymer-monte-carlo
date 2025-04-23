@@ -36,6 +36,7 @@ def plot_gyration(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
             label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
+            color="C1",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
@@ -43,6 +44,7 @@ def plot_gyration(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
             label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
+            color="C1",
         )
 
     # Show number of polymers on secondary y-axis
@@ -52,9 +54,9 @@ def plot_gyration(
     ax_right.plot(
         lengths,
         np.sum(alive[:, :max_step], axis=0),
-        color="gray",
         alpha=0.5,
         label="number of polymers",
+        color="C2",
     )
 
     lines, labels = ax.get_legend_handles_labels()
@@ -99,6 +101,7 @@ def plot_end_to_end(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
             label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
+            color="C1",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
@@ -106,6 +109,7 @@ def plot_end_to_end(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
             label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
+            color="C1",
         )
 
     # Show number of polymers on secondary y-axis
@@ -115,9 +119,9 @@ def plot_end_to_end(
     ax_right.plot(
         lengths,
         np.sum(alive[:, :max_step], axis=0),
-        color="gray",
         alpha=0.5,
         label="number of polymers",
+        color="C2",
     )
 
     lines, labels = ax.get_legend_handles_labels()
