@@ -7,15 +7,31 @@ import scipy.optimize as opt
 def plot(
     lengths: NDArray[np.int64],
     r2: NDArray[np.float64],
-    weights: NDArray[np.float64],
+    weights: NDArray[np.longdouble],
     dim: int,
-    alive: bool,
+    alive: NDArray[np.bool],
     max_step: int,
     axis_name: str,
     label: str,
     title: str,
     file_name: str,
 ):
+    """
+    Creates a plot for a length-dependent observable with a twinx that contains
+    the number of polymers of at least that length
+
+    Parameters
+        lengths (ndarray): array of the lengths the points are given at, the values for the X-axis
+        r2 (ndarray): array containing the values of the respective observable at each length
+        weights (ndarray): array containing the weights of each of the observables, for calculating error and mean
+        dim (int): the dimension of the simulation, for which fit to use
+        alive (ndarray): array containing a mask of when the polymers still exist
+        max_step (int): the size of the longest polymer in the dataset
+        axis_name (str): the label to put on the left axis
+        label (str): the name for the label in the legend
+        title (str): the title for the plot
+        file_name (str): what file to save the plot to
+    """
     mean_r2, error_r2 = analytical_error(r2, weights, alive)
 
     fig, ax = plt.subplots()
@@ -76,11 +92,23 @@ def plot(
 def plot_gyration(
     lengths: NDArray[np.int64],
     r2: NDArray[np.float64],
-    weights: NDArray[np.float64],
+    weights: NDArray[np.longdouble],
     dim: int,
-    alive: bool,
+    alive: NDArray[np.bool],
     max_step: int,
 ):
+    """
+    Creates a plot for the gyration with a twinx that contains
+    the number of polymers of at least that length
+
+    Parameters
+        lengths (ndarray): array of the lengths the points are given at, the values for the X-axis
+        r2 (ndarray): array containing the values of the gyration at each length
+        weights (ndarray): array containing the weights of each of the observables, for calculating error and mean
+        dim (int): the dimension of the simulation, for which fit to use
+        alive (ndarray): array containing a mask of when the polymers still exist
+        max_step (int): the size of the longest polymer in the dataset
+    """
     plot(
         lengths,
         r2,
@@ -98,11 +126,23 @@ def plot_gyration(
 def plot_end_to_end(
     lengths: NDArray[np.int64],
     r2: NDArray[np.float64],
-    weights: NDArray[np.float64],
+    weights: NDArray[np.longdouble],
     dim: int,
-    alive: bool,
+    alive: NDArray[np.bool],
     max_step: int,
 ):
+    """
+    Creates a plot for the end-to-end distance with a twinx that contains
+    the number of polymers of at least that length
+
+    Parameters
+        lengths (ndarray): array of the lengths the points are given at, the values for the X-axis
+        r2 (ndarray): array containing the values of the end-to-end distance at each length
+        weights (ndarray): array containing the weights of each of the observables, for calculating error and mean
+        dim (int): the dimension of the simulation, for which fit to use
+        alive (ndarray): array containing a mask of when the polymers still exist
+        max_step (int): the size of the longest polymer in the dataset
+    """
     plot(
         lengths,
         r2,
@@ -117,8 +157,18 @@ def plot_end_to_end(
     )
 
 
-def analytical_error(r2, w, alive):
-    N_temp, max_step = r2.shape
+def analytical_error(
+    r2: NDArray[np.float64], w: NDArray[np.longdouble], alive: NDArray[np.bool]
+) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+    """
+    Calculates the weighted mean and the analytical error of the observable r2 using the weights in w.
+
+    Parameters
+        r2 (ndarray): array containing the values of the observable at each length for each chain
+        w (ndarray): array containing the weights for each length of each chain
+        alive (ndarray): array containing a boolean mask of whether the chain exists at a length
+    """
+    _, max_step = r2.shape
     N = np.sum(alive[:, :max_step], axis=0)
     r2_mean = np.sum(w * r2, axis=0) / np.sum(w, axis=0)
     numerator = np.sum((w / np.max(w)) ** 2 * (r2 - r2_mean) ** 2, axis=0)
@@ -128,8 +178,22 @@ def analytical_error(r2, w, alive):
 
 
 def growth_model(L, A):
+    """
+    a model to fit for the 2D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+    """
     return A * L ** (3 / 2)
 
 
 def growth_model_3(L, A):
+    """
+    a model to fit for the 3D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+    """
     return A * L ** (6 / 5)
