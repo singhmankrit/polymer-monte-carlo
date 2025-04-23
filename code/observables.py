@@ -38,4 +38,3 @@ def find_observables(amount_of_chains, max_step, chains, alive):
             alive[chain, :max_step]
         ]
     return end_to_ends, gyrations
-

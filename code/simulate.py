@@ -8,6 +8,7 @@ from tqdm.contrib.logging import logging_redirect_tqdm
 
 LOG = logging.getLogger(__name__)
 
+
 def get_allowed_sides_2d(
     chain: NDArray[np.float64], step: int
 ) -> list[NDArray[np.float64]]:
