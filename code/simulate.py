@@ -12,6 +12,16 @@ LOG = logging.getLogger(__name__)
 def get_allowed_sides_2d(
     chain: NDArray[np.float64], step: int
 ) -> list[NDArray[np.float64]]:
+    """
+    create a list of allowed next positions for a 2 dimensional grid with self-avoidance
+
+    Parameters
+        chain (ndarray): array of positions up to the current step
+        step (int): the current step
+
+    Returns
+        list: list of valid coordinates for the next step
+    """
     current_position = chain[step, :]
     return [
         new_position
@@ -28,6 +38,16 @@ def get_allowed_sides_2d(
 def get_allowed_sides_2d_free(
     chain: NDArray[np.float64], step: int
 ) -> list[NDArray[np.float64]]:
+    """
+    create a list of allowed next positions for a 2 dimensional grid random walk with self-intersection
+
+    Parameters
+        chain (ndarray): array of positions up to the current step
+        step (int): the current step
+
+    Returns
+        list: list of valid coordinates for the next step
+    """
     current_position = chain[step, :]
     return [
         current_position + np.array([1, 0]),
@@ -40,6 +60,16 @@ def get_allowed_sides_2d_free(
 def get_allowed_sides_3d(
     chain: NDArray[np.float64], step: int
 ) -> list[NDArray[np.float64]]:
+    """
+    create a list of allowed next positions for a 3 dimensional grid with self-avoidance
+
+    Parameters
+        chain (ndarray): array of positions up to the current step
+        step (int): the current step
+
+    Returns
+        list: list of valid coordinates for the next step
+    """
     current_position = chain[step, :]
     return [
         new_position
@@ -58,6 +88,16 @@ def get_allowed_sides_3d(
 def get_allowed_sides_3d_free(
     chain: NDArray[np.float64], step: int
 ) -> list[NDArray[np.float64]]:
+    """
+    create a list of allowed next positions for a 3 dimensional grid random walk with self-intersection
+
+    Parameters
+        chain (ndarray): array of positions up to the current step
+        step (int): the current step
+
+    Returns
+        list: list of valid coordinates for the next step
+    """
     current_position = chain[step, :]
     return [
         current_position + np.array([1, 0, 0]),
@@ -78,6 +118,17 @@ def do_step(
         [NDArray[np.float64], int], list[NDArray[np.float64]]
     ],
 ):
+    """
+    Chooses a valid next site for a chain, modifies the weight and chooses one to append.
+    If no valid site exists the Alive for the chain is set to False from the next position onward.
+
+    Parameters
+        chain (ndarray): the positions of the chain to step
+        weight (ndarray): the weights of the chain to step
+        alive (ndarray): whether the chain is alive or not
+        step (int): the current step to index, do_step will modify the array at `step + 1`
+        next_sites_function (function): A function that returns a list of next valid position
+    """
     if not alive[step]:
         return
     allowed_sides = next_sites_function(chain, step)
@@ -93,6 +144,19 @@ def do_step(
 def init_polymer_storage(
     amount_of_chains: int, target_length: int, dimension: int
 ) -> tuple[NDArray[np.float64], NDArray[np.longdouble], NDArray[np.bool]]:
+    """
+    Initialises numpy arrays with the correct size and dimension for the generation of the polymers
+
+    Parameters
+        amount_of_chains (int): how many chains to start generating (may increase due to PERM)
+        target_length (int): the maximum length L we want to generate
+        dimension (int): how many coordinates there are to store for each location
+
+    Returns
+        ndarray: array to store the positions of the chains into
+        ndarray: array to store the weights of the chains into
+        ndarray: array to store the alive status of the chains into
+    """
     # since we want length L we'll have L+1 points
     target_length += 1
     # allow for all three coordinates up to the max length for each chain
@@ -113,7 +177,21 @@ def perm_step(
     step: int,
     amount_of_chains: int,
     perm_weights: tuple[float, float],
-):
+) -> tuple[NDArray[np.float64], NDArray[np.longdouble], NDArray[np.bool]]:
+    """
+    Does a step of pruning and enriching on the chains after they were generated.
+    Note: modifies `step + 1`.
+
+    Parameters
+        chains (ndarray): array containing the coordinates of the chains at all generated lengths
+        weights (ndarray): array containing the weights of the chains at all generated lengths
+        alive (ndarray): array containing whether the chains are alive at certain lengths
+
+    Returns
+        ndarray: array with the chains, including the newly generated ones from Enrichment
+        ndarray: array with the weights, including the increases and reductions for `step + 1`
+        ndarray: array with the alive status, including the modified status of chains that got pruned
+    """
     w_low, w_high = perm_weights
     mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
     to_add: list[int] = []  # keep track of what polymers got duplicated
@@ -161,6 +239,17 @@ def grow_polymers(
     do_perm: bool,
     perm_weights: tuple[float, float],
 ):
+    """
+    Grows a number of polymers upto a target length, if all polymers get stuck this function returns early.
+
+    Parameters
+        amount_of_chains (int): how many unique polymers to start with
+        target_length (int): if this length is reached, stop
+        dimension (int): how many coordinates are needed for a point to be specified
+        next_sides_function (function): a function that gives the growing possibilities for a certain polymer
+        do_perm (bool): whether to include the PERM step or not
+        perm_weights (float, float): the factors to determine whether to prune or enrich
+    """
     chains, weights, alive = init_polymer_storage(
         amount_of_chains, target_length, dimension
     )
