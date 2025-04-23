@@ -65,6 +65,24 @@ The weights used in the Rosebluth method depend on the number of available direc
 ## Week 2
 (due 29 April 2025, 11:00)
 
+### Planning
+
+- [x] add configuration file @mankritsingh
+- [ ] use sigma for the opt fit @rjuyal
+- [ ] fix divide-by-zero error @mankritsingh
+- [ ] create docstrings @npaarts
+- [ ] verify correctness of 2d and 3d
+  - [ ] unit tests @everyone
+    - [ ] end-to-end produces correct numbers
+    - [ ] gyration produces correct numbers
+    - [ ] next step functions produce correct next steps
+    - [ ] perm removes/creates the correct polymers
+- [ ] decide what we're going to research @everyone
+- [ ] add typehints where reasonable @npaarts
+- [ ] add `amount of polymers` to the legend @npaarts
+- [ ] change fit name to mention `fit` (and color) @npaarts
+- [ ] default `do_perm = true` @npaarts
+- [ ] rename `mean_r2` and `error_r2` in `plot_end_to_end` and `plot_gyration` @mankritsingh
 
 ## Week 3
 (due 6 May 2025, 11:00)
