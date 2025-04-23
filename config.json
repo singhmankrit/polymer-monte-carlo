@@ -1,7 +1,7 @@
 {
 	"amount_of_chains": 3000,
 	"target_length": 1000,
-	"do_perm": false,
+	"do_perm": true,
 	"w_low": 0.316,
 	"w_high": 3.16,
 	"dimension": 2,
