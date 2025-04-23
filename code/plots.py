@@ -81,7 +81,6 @@ def plot(
 
     lines, labels = ax.get_legend_handles_labels()
     lines2, labels2 = ax_right.get_legend_handles_labels()
-    print(lines2, labels2)
     ax.legend(lines + lines2, labels + labels2, loc=0)
 
     plt.tight_layout()
