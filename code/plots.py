@@ -35,23 +35,35 @@ def plot_gyration(
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"${opt_params[0]:.03f} L^{{3/2}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
+            color="C1",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
+            color="C1",
         )
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_ylabel("number of polymers")
     ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0), color="gray", alpha=0.5)
+    ax_right.plot(
+        lengths,
+        np.sum(alive[:, :max_step], axis=0),
+        alpha=0.5,
+        label="number of polymers",
+        color="C2",
+    )
 
-    ax.legend()
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax_right.get_legend_handles_labels()
+    print(lines2, labels2)
+    ax.legend(lines + lines2, labels + labels2, loc=0)
+
     plt.tight_layout()
     fig.savefig("gyration.png")
     plt.close()
@@ -88,23 +100,35 @@ def plot_end_to_end(
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"${opt_params[0]:.03f} L^{{3/2}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
+            color="C1",
         )
     elif dim == 3:
         opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"${opt_params[0]:.03f} L^{{6/5}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
+            color="C1",
         )
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
-    ax_right.set_ylabel("amount of polymers")
+    ax_right.set_ylabel("number of polymers")
     ax_right.set_yscale("log")
-    ax_right.plot(lengths, np.sum(alive[:, :max_step], axis=0), color="gray", alpha=0.5)
+    ax_right.plot(
+        lengths,
+        np.sum(alive[:, :max_step], axis=0),
+        alpha=0.5,
+        label="number of polymers",
+        color="C2",
+    )
 
-    ax.legend()
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax_right.get_legend_handles_labels()
+    print(lines2, labels2)
+    ax.legend(lines + lines2, labels + labels2, loc=0)
+
     plt.tight_layout()
     fig.savefig("end_to_end.png")
     plt.close()
