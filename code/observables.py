@@ -1,8 +1,14 @@
 import numpy as np
+from numpy.typing import NDArray
 from tqdm import trange
 
 
-def find_observables(amount_of_chains, max_step, chains, alive):
+def find_observables(
+    amount_of_chains: int,
+    max_step: int,
+    chains: NDArray[np.float64],
+    alive: NDArray[np.bool],
+) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     end_to_ends = np.zeros((amount_of_chains, max_step))
     gyrations = np.zeros((amount_of_chains, max_step))
     for chain in trange(amount_of_chains):
