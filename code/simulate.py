@@ -204,7 +204,7 @@ def perm_step(
             if random() < 0.5:
                 pruned += 1
                 # don't grow this chain anymore
-                alive[chain, step + 1] = False
+                alive[chain, step + 1:] = False
                 # discard the weight at length L'
                 weights[chain, step + 1] = 0
             else:
@@ -254,7 +254,6 @@ def grow_polymers(
         amount_of_chains, target_length, dimension
     )
     with logging_redirect_tqdm():
-        max_step = 1  # we start at 1 point existing (the start)
         for step in trange(target_length):
             for chain in range(amount_of_chains):
                 do_step(
@@ -264,15 +263,21 @@ def grow_polymers(
                     step,
                     next_sides_function,
                 )
-
             # we use step+1 to get the L'
             if not alive[:, step + 1].any():
                 LOG.warning(f"All chains died by step {step + 1}, skipping other steps")
                 break
+
             if do_perm:
                 chains, weights, alive = perm_step(
                     chains, weights, alive, step, amount_of_chains, perm_weights
                 )
             amount_of_chains = chains.shape[0]
-            max_step += 1
-    return max_step, chains.shape[0], chains, alive, weights
+    max_step = np.max(np.sum(alive, axis=1))
+    return (
+        max_step,
+        chains.shape[0],
+        chains[:, :max_step, :],
+        alive[:, :max_step],
+        weights[:, :max_step]
+    )
