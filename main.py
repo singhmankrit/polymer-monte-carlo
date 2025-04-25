@@ -50,3 +50,10 @@ if "gyration" in to_plot:
     plots.plot_gyration(
         lengths, gyrations, weights[:, :max_step], dimension, alive, max_step
     )
+
+if "animation" in to_plot:
+    # the indices to plot (1 is the longest, 2 the second longest, etc.)
+    idxs = np.array([i for i in range(1,17)])
+    plots.plot_animation(
+        chains, alive, idxs, dimension
+    )
