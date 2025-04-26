@@ -33,12 +33,13 @@ def parse_config(file_path: str):
         float: the upper weight bound for PERM
         int: the dimensionality of each point
         function: the function to randomly sample the next allowed point for a polymer
+        list: types of output to generate (`e2e`, `gyration`, `animation`)
     """
     with open(file_path) as file:
         config: dict[str, Any] = json.load(file)
         amount_of_chains: int = config.get("amount_of_chains", 3000)
         target_length: int = config.get("target_length", 1000)
-        do_perm: bool = config.get("do_perm", False)
+        do_perm: bool = config.get("do_perm", True)
         w_low: float = config.get("w_low", 0.316)
         w_high: float = config.get("w_high", 3.16)
         dimension: int = config.get("dimension", 2)
@@ -46,6 +47,7 @@ def parse_config(file_path: str):
             "next_sides_function", "simulate.get_allowed_sides_2d"
         )
         next_sides_function = resolve_function(next_sides_function_str)
+        to_output = config.get("outputs", ["e2e", "gyration"])
         return (
             amount_of_chains,
             target_length,
@@ -54,4 +56,5 @@ def parse_config(file_path: str):
             w_high,
             dimension,
             next_sides_function,
+            to_output
         )

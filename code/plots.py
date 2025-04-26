@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 import scipy.optimize as opt
+from matplotlib import animation
 
 
 def plot(
@@ -86,6 +87,63 @@ def plot(
     plt.tight_layout()
     fig.savefig(file_name)
     plt.close()
+
+def plot_animation(
+    chains: NDArray[np.float64], alive: NDArray[np.bool], idxs: NDArray[np.int64], dimension: int
+):
+    """
+    Create an animation of the polymer path for the `idxs` polymers
+    """
+
+    alive_sum = np.sum(alive, axis=1)
+    argsorted = np.argsort(alive_sum)
+    sorted = chains[argsorted]
+    sorted_len = alive_sum[argsorted]
+
+    fig = plt.figure()
+    if dimension == 2:
+        ax = fig.add_subplot()
+    elif dimension == 3:
+        ax = fig.add_subplot(projection='3d')
+    title = ax.set_title("selected polymers at step 0")
+
+    def update(num, data, lines, title):
+        title.set_text(f"selected polymers at step {num}")
+        for i, line in enumerate(lines):
+            if sorted_len[-idxs[i]] > num:
+                line.set_data(data[-idxs[i],:num+1,:2].T)
+                if dimension == 3:
+                    line.set_3d_properties(data[-idxs[i],:num+1,2].T)
+
+    lens = sorted_len[-idxs]
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    if dimension == 2:
+        ax.set_xlim([np.min(sorted[-idxs,:,0]) - 0.5, np.max(sorted[-idxs,:,0]) + 0.5])
+        ax.set_ylim([np.min(sorted[-idxs,:,1]) - 0.5, np.max(sorted[-idxs,:,1]) + 0.5])
+    elif dimension == 3:
+        ax.set_zlabel('Z')
+        ax.set_xlim3d([np.min(sorted[-idxs,:,0]) - 0.5, np.max(sorted[-idxs,:,0]) + 0.5])
+        ax.set_ylim3d([np.min(sorted[-idxs,:,1]) - 0.5, np.max(sorted[-idxs,:,1]) + 0.5])
+        ax.set_zlim3d([np.min(sorted[-idxs,:,2]) - 0.5, np.max(sorted[-idxs,:,2]) + 0.5])
+
+
+    lines = []
+    for idx in idxs:
+        if dimension == 2:
+            line, = ax.plot(
+                sorted[-idx,0:1,0],
+                sorted[-idx,0:1,1])
+        elif dimension == 3:
+            line, = ax.plot(
+                sorted[-idx,0:1,0],
+                sorted[-idx,0:1,1],
+                sorted[-idx,0:1,2])
+        lines.append(line)
+
+    ani = animation.FuncAnimation(fig, update, np.max(lens), fargs=(sorted, lines, title), blit=False)
+    ani.save('polymers.mp4', writer='ffmpeg', fps=20)
 
 
 def plot_gyration(
