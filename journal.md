@@ -119,21 +119,25 @@ I also reviewed merge requests.
 Basic simulation(with R2 score to see goodness of fit)
 
 Rosenbluth 2D
+
 ![](./journal/week2/end_to_end_rose2d.png)
 
 ![](./journal/week2/gyration_rose2d.png)
 
 PERM 2D
+
 ![](./journal/week2/end_to_end_perm2d.png)
 
 ![](./journal/week2/gyration_perm2d.png)
 
 Rosenbluth 3D
+
 ![](./journal/week2/end_to_end_rose3d.png)
 
 ![](./journal/week2/gyration_rose3d.png)
 
 PERM 3D
+
 ![](./journal/week2/end_to_end_perm3d.png)
 
 ![](./journal/week2/gyration_perm3d.png)
