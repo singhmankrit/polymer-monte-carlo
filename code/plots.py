@@ -230,7 +230,7 @@ def analytical_error(
     r2_mean = np.sum(w * r2, axis=0) / np.sum(w, axis=0)
     numerator = np.sum((w / np.max(w)) ** 2 * (r2 - r2_mean) ** 2, axis=0)
     denominator = (np.sum(w / np.max(w), axis=0)) ** 2
-    error = np.sqrt((N / (N - 1)) * (numerator / denominator))
+    error = np.sqrt((N / (N - 1 + 1e-4)) * (numerator / denominator))
     return r2_mean, error
 
 

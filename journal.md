@@ -69,7 +69,7 @@ The weights used in the Rosebluth method depend on the number of available direc
 
 - [x] add configuration file @mankritsingh
 - [ ] use sigma for the opt fit @rjuyal
-- [ ] fix divide-by-zero error @mankritsingh
+- [x] fix divide-by-zero error @mankritsingh (done in !14)
 - [x] create docstrings @npaarts (done in !11)
 - [ ] verify correctness of 2d and 3d
   - [ ] unit tests @everyone
@@ -106,6 +106,10 @@ options for what to do
 From these points we have decided to start by implementing animations to use as a simple
 sanity check, after that we will continue by creating non-square lattices.
 If we have a lot of time after this, we will try to calculate the polymer entropy.
+
+@mankritsingh
+This week's original milestones were already complete, so we made some quality of life improvements (removed some errors etc.) like in Merge Requests like !13 and !14 
+I also spent some time planning our "what we want to research" section in the beginning of the week, since we had a lot of ideas and we took some time discussing them.
 
 ## Week 3
 (due 6 May 2025, 11:00)
