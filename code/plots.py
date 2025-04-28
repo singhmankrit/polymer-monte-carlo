@@ -34,9 +34,9 @@ def plot(
         file_name (str): what file to save the plot to
     """
     observable_mean, observable_error = analytical_error(r2, weights, alive)
-
+    observable_error = np.where(observable_error <= 1e-2, 1e-2, observable_error)
     fig, ax = plt.subplots()
-
+    print(title)
     ax.set_title(title)
     ax.set_xlabel(r"L ($\sigma$)")
     ax.set_ylabel(axis_name)
@@ -52,19 +52,33 @@ def plot(
     )
     # Fit model depending on dimension
     if dim == 2:
-        opt_params, _ = opt.curve_fit(growth_model, lengths, observable_mean)
+        opt_params, _ = opt.curve_fit(growth_model, lengths, observable_mean, sigma=observable_error, absolute_sigma=True)
+        y_true = observable_mean
+        y_pred = opt_params[0] * lengths ** (3 / 2)
+        ss_res = np.sum((y_true - y_pred) ** 2)
+        ss_tot = np.sum((y_true - np.mean(y_true))** 2) 
+        r2 = 1 - ss_res / ss_tot
+        
+        print(f"R2 score: {r2}")
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$ R2 Score: {r2:.03f}",
             color="C1",
         )
     elif dim == 3:
-        opt_params, _ = opt.curve_fit(growth_model_3, lengths, observable_mean)
+        opt_params, _ = opt.curve_fit(growth_model_3, lengths, observable_mean, sigma=observable_error, absolute_sigma=True)
+        y_true = observable_mean
+        y_pred = opt_params[0] * lengths ** (6 / 5)
+        ss_res = np.sum((y_true - y_pred) ** 2)
+        ss_tot = np.sum((y_true - np.mean(y_true))** 2) 
+        r2 = 1 - ss_res / ss_tot
+        
+        print(f"R2 score: {r2}")
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$ R2 Score: {r2:.03f}",
             color="C1",
         )
 
