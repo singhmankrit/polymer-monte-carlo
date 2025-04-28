@@ -33,7 +33,7 @@ def plot(
         title (str): the title for the plot
         file_name (str): what file to save the plot to
     """
-    mean_r2, error_r2 = analytical_error(r2, weights, alive)
+    observable_mean, observable_error = analytical_error(r2, weights, alive)
 
     fig, ax = plt.subplots()
 
@@ -41,18 +41,18 @@ def plot(
     ax.set_xlabel(r"L ($\sigma$)")
     ax.set_ylabel(axis_name)
 
-    ax.plot(lengths, mean_r2, label=label, color="C0")
+    ax.plot(lengths, observable_mean, label=label, color="C0")
     ax.fill_between(
         lengths,
-        mean_r2 - error_r2,
-        mean_r2 + error_r2,
+        observable_mean - observable_error,
+        observable_mean + observable_error,
         alpha=0.3,
         color="C0",
         label="error",
     )
     # Fit model depending on dimension
     if dim == 2:
-        opt_params, _ = opt.curve_fit(growth_model, lengths, mean_r2)
+        opt_params, _ = opt.curve_fit(growth_model, lengths, observable_mean)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
@@ -60,7 +60,7 @@ def plot(
             color="C1",
         )
     elif dim == 3:
-        opt_params, _ = opt.curve_fit(growth_model_3, lengths, mean_r2)
+        opt_params, _ = opt.curve_fit(growth_model_3, lengths, observable_mean)
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
