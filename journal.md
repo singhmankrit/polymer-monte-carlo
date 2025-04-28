@@ -142,6 +142,20 @@ PERM 3D
 
 ![](./journal/week2/gyration_perm3d.png)
 
+@npaarts
+
+I've not been able to do as much this week, we decided on Wednesday that I had to do some small things, like adding labels to the axes. 
+After that I made animations to use as a sanity check of the produced polymers. This uncovered a bug where polymers would sometimes teleport to the origin again. 
+When I fixed that bug I was done for the week(!12).
+
+Animation of polymers in 2D 
+
+![](./journal/week2/polymers_2d.mp4)
+
+Animation of polymers in 3D
+
+![](./journal/week2/polymers_3d.mp4)
+
 ## Week 3
 (due 6 May 2025, 11:00)
 
