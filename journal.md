@@ -68,7 +68,7 @@ The weights used in the Rosebluth method depend on the number of available direc
 ### Planning
 
 - [x] add configuration file @mankritsingh
-- [ ] use sigma for the opt fit @rjuyal
+- [x] use sigma for the opt fit @rjuyal
 - [x] fix divide-by-zero error @mankritsingh (done in !14)
 - [x] create docstrings @npaarts (done in !11)
 - [ ] verify correctness of 2d and 3d
@@ -110,6 +110,33 @@ If we have a lot of time after this, we will try to calculate the polymer entrop
 @mankritsingh
 This week's original milestones were already complete, so we made some quality of life improvements (removed some errors etc.) like in Merge Requests like !13 and !14 
 I also spent some time planning our "what we want to research" section in the beginning of the week, since we had a lot of ideas and we took some time discussing them.
+
+@rjuyal
+
+This week I worked on making the scipy curve fit take into account the errors we had computed analytically last week and also computed the R2 score to have a measure of goodness of fit to validate(!15).
+I also reviewed merge requests.
+
+Basic simulation(with R2 score to see goodness of fit)
+
+Rosenbluth 2D
+![](./journal/week2/end_to_end_rose2d.png)
+
+![](./journal/week2/gyration_rose2d.png)
+
+PERM 2D
+![](./journal/week2/end_to_end_perm2d.png)
+
+![](./journal/week2/gyration_perm2d.png)
+
+Rosenbluth 3D
+![](./journal/week2/end_to_end_rose3d.png)
+
+![](./journal/week2/gyration_rose3d.png)
+
+PERM 3D
+![](./journal/week2/end_to_end_perm3d.png)
+
+![](./journal/week2/gyration_perm3d.png)
 
 ## Week 3
 (due 6 May 2025, 11:00)
