@@ -273,7 +273,12 @@ def grow_polymers(
                     chains, weights, alive, step, amount_of_chains, perm_weights
                 )
             amount_of_chains = chains.shape[0]
-    max_step = np.max(np.sum(alive, axis=1))
+    alive_counts = np.sum(alive, axis=0)
+    threshold = amount_of_chains // 3
+    try:
+        max_step = np.where(alive_counts <= threshold)[0][0]
+    except IndexError:
+        max_step = np.max(np.sum(alive, axis=1))
     return (
         max_step,
         chains.shape[0],
