@@ -76,7 +76,7 @@ The weights used in the Rosebluth method depend on the number of available direc
     - [ ] end-to-end produces correct numbers
     - [ ] gyration produces correct numbers
     - [ ] next step functions produce correct next steps
-    - [ ] perm removes/creates the correct polymers
+    - [x] perm removes/creates the correct polymers (done in !16)
 - [x] decide what we're going to research @everyone
 - [x] add typehints where reasonable @npaarts (done in !11)
 - [x] add `amount of polymers` to the legend @npaarts (done in !10)
@@ -108,8 +108,9 @@ sanity check, after that we will continue by creating non-square lattices.
 If we have a lot of time after this, we will try to calculate the polymer entropy.
 
 @mankritsingh \
-This week's original milestones were already complete, so we made some basic improvements (removed some errors and adding unit tests etc.) like in Merge Requests !13 !14 and !16 (adds unit tests)
-I also spent some time planning our "what we want to research" section in the beginning of the week, since we had a lot of ideas and we took some time discussing them.
+This week's original milestones were already complete, so I added some unit tests in !16 \
+Also made some basic improvements (removed some errors etc.) like in Merge Requests !13 and !14 \
+In addition to this, I spent some time planning our "what we want to research" section in the beginning of the week, since we had a lot of ideas and we took some time discussing them.
 
 @rjuyal
 
