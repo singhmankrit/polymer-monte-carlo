@@ -14,7 +14,7 @@ def resolve_function(fully_qualified_name: str):
         function: the function object corresponding with the name
     """
     module_name, func_name = fully_qualified_name.rsplit(".", 1)
-    module = importlib.import_module(f"code.{module_name}")
+    module = importlib.import_module(f"polymer_code.{module_name}")
     return getattr(module, func_name)
 
 
