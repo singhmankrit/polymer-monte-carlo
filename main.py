@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import numpy as np
-from code import utilities, simulate, plots, observables
+from polymer_code import utilities, simulate, plots, observables
 
 (
     amount_of_chains,

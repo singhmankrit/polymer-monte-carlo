@@ -107,8 +107,8 @@ From these points we have decided to start by implementing animations to use as 
 sanity check, after that we will continue by creating non-square lattices.
 If we have a lot of time after this, we will try to calculate the polymer entropy.
 
-@mankritsingh
-This week's original milestones were already complete, so we made some quality of life improvements (removed some errors etc.) like in Merge Requests like !13 and !14 
+@mankritsingh \
+This week's original milestones were already complete, so we made some basic improvements (removed some errors and adding unit tests etc.) like in Merge Requests !13 !14 and !16 (adds unit tests)
 I also spent some time planning our "what we want to research" section in the beginning of the week, since we had a lot of ideas and we took some time discussing them.
 
 @rjuyal
