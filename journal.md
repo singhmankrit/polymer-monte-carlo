@@ -160,6 +160,12 @@ Animation of polymers in 3D
 ## Week 3
 (due 6 May 2025, 11:00)
 
+### Planning
+
+- [ ] Add seed for consistent comparisons @rjuyal
+- [ ] Fine tune threshold @rjuyal
+- [ ] Try different lattice like hexagon and triangle @mankritsingh
+- [ ] Profile performance @npaarts
 
 ## Reminder final deadline
 
