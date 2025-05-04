@@ -15,6 +15,7 @@ from polymer_code import utilities, simulate, plots, observables
 
 assert next_sides_function != simulate.get_allowed_sides_2d or dimension == 2
 assert next_sides_function != simulate.get_allowed_sides_2d_free or dimension == 2
+assert next_sides_function != simulate.get_allowed_sides_triangle or dimension == 2
 assert next_sides_function != simulate.get_allowed_sides_3d or dimension == 3
 assert next_sides_function != simulate.get_allowed_sides_3d_free or dimension == 3
 
