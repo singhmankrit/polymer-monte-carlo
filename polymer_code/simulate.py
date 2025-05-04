@@ -123,7 +123,7 @@ def get_allowed_sides_triangle(
         list: list of valid coordinates for the next step
     """
     current_position = chain[step, :]
-    sqrt_3_by_2 = np.sqrt(3) / 2
+    sqrt_3_by_2 = np.sqrt(3).round(3) / 2
     return [
         new_position
         for new_position in [
