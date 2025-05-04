@@ -1,4 +1,4 @@
-from random import choice, random
+import random
 from typing import Callable
 import numpy as np
 from numpy.typing import NDArray
@@ -200,7 +200,7 @@ def do_step(
     allowed_sides = next_sites_function(chain, step)
     amount_of_allowed_sides = len(allowed_sides)
     if amount_of_allowed_sides > 0:
-        next = choice(allowed_sides)
+        next = random.choice(allowed_sides)
         chain[step + 1, :] = next
         weight[step + 1] = weight[step] * amount_of_allowed_sides
     else:
@@ -267,7 +267,7 @@ def perm_step(
             continue
         # Pruning
         if weights[chain, step + 1] < w_low * mean_weight:
-            if random() < 0.5:
+            if random.random() < 0.5:
                 pruned += 1
                 # don't grow this chain anymore
                 alive[chain, step + 1 :] = False
@@ -304,6 +304,8 @@ def grow_polymers(
     ],
     do_perm: bool,
     perm_weights: tuple[float, float],
+    seed: int,
+    threshold: int,
 ):
     """
     Grows a number of polymers upto a target length, if all polymers get stuck this function returns early.
@@ -315,7 +317,10 @@ def grow_polymers(
         next_sides_function (function): a function that gives the growing possibilities for a certain polymer
         do_perm (bool): whether to include the PERM step or not
         perm_weights (float, float): the factors to determine whether to prune or enrich
+        seed (int): seed for the random number generator
+        threshold (int): how many polymers need to be alive to continue
     """
+    random.seed(seed)
     chains, weights, alive = init_polymer_storage(
         amount_of_chains, target_length, dimension
     )

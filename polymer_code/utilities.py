@@ -48,6 +48,8 @@ def parse_config(file_path: str):
         )
         next_sides_function = resolve_function(next_sides_function_str)
         to_output = config.get("outputs", ["e2e", "gyration"])
+        seed: int = config.get("seed", 42)
+        threshold: int = config.get("threshold", 100)
         return (
             amount_of_chains,
             target_length,
@@ -57,4 +59,6 @@ def parse_config(file_path: str):
             dimension,
             next_sides_function,
             to_output,
+            seed,
+            threshold,
         )

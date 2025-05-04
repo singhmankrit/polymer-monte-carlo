@@ -11,6 +11,8 @@ from polymer_code import utilities, simulate, plots, observables
     dimension,
     next_sides_function,
     to_plot,
+    seed,
+    threshold
 ) = utilities.parse_config("config.json")
 
 assert next_sides_function != simulate.get_allowed_sides_2d or dimension == 2
@@ -27,6 +29,8 @@ max_step, amount_of_chains, chains, alive, weights = simulate.grow_polymers(
     next_sides_function,
     do_perm,
     (w_low, w_high),
+    seed,
+    threshold,
 )
 
 print(max_step, amount_of_chains)
