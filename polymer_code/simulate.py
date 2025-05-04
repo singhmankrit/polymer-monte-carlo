@@ -171,7 +171,7 @@ def get_allowed_sides_hexagon(
                 current_position + np.array([sqrt_3_by_2, -1 / 2]),
                 current_position + np.array([-sqrt_3_by_2, -1 / 2]),
             ]
-            if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
+            if (not (chain[:step] == new_position).all(axis=1).any())
         ]
 
 
