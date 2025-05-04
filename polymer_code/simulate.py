@@ -129,10 +129,10 @@ def get_allowed_sides_triangle(
         for new_position in [
             current_position + np.array([0, 1]),
             current_position + np.array([0, -1]),
-            current_position + np.array([sqrt_3_by_2, 1/2]),
-            current_position + np.array([sqrt_3_by_2, -1/2]),
-            current_position + np.array([-sqrt_3_by_2, 1/2]),
-            current_position + np.array([-sqrt_3_by_2, -1/2]),
+            current_position + np.array([sqrt_3_by_2, 1 / 2]),
+            current_position + np.array([sqrt_3_by_2, -1 / 2]),
+            current_position + np.array([-sqrt_3_by_2, 1 / 2]),
+            current_position + np.array([-sqrt_3_by_2, -1 / 2]),
         ]
         if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
     ]
@@ -158,8 +158,8 @@ def get_allowed_sides_hexagon(
             new_position
             for new_position in [
                 current_position + np.array([0, -1]),
-                current_position + np.array([sqrt_3_by_2, 1/2]),
-                current_position + np.array([-sqrt_3_by_2, 1/2]),
+                current_position + np.array([sqrt_3_by_2, 1 / 2]),
+                current_position + np.array([-sqrt_3_by_2, 1 / 2]),
             ]
             if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
         ]
@@ -168,8 +168,8 @@ def get_allowed_sides_hexagon(
             new_position
             for new_position in [
                 current_position + np.array([0, 1]),
-                current_position + np.array([sqrt_3_by_2, -1/2]),
-                current_position + np.array([-sqrt_3_by_2, -1/2]),
+                current_position + np.array([sqrt_3_by_2, -1 / 2]),
+                current_position + np.array([-sqrt_3_by_2, -1 / 2]),
             ]
             if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
         ]
@@ -270,7 +270,7 @@ def perm_step(
             if random() < 0.5:
                 pruned += 1
                 # don't grow this chain anymore
-                alive[chain, step + 1:] = False
+                alive[chain, step + 1 :] = False
                 # discard the weight at length L'
                 weights[chain, step + 1] = 0
             else:
@@ -350,5 +350,5 @@ def grow_polymers(
         chains.shape[0],
         chains[:, :max_step, :],
         alive[:, :max_step],
-        weights[:, :max_step]
+        weights[:, :max_step],
     )

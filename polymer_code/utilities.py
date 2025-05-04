@@ -56,5 +56,5 @@ def parse_config(file_path: str):
             w_high,
             dimension,
             next_sides_function,
-            to_output
+            to_output,
         )
