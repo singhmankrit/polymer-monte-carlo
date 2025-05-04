@@ -52,13 +52,19 @@ def plot(
     )
     # Fit model depending on dimension
     if dim == 2:
-        opt_params, _ = opt.curve_fit(growth_model, lengths, observable_mean, sigma=observable_error, absolute_sigma=True)
+        opt_params, _ = opt.curve_fit(
+            growth_model,
+            lengths,
+            observable_mean,
+            sigma=observable_error,
+            absolute_sigma=True,
+        )
         y_true = observable_mean
         y_pred = opt_params[0] * lengths ** (3 / 2)
         ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true))** 2) 
+        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
         r2 = 1 - ss_res / ss_tot
-        
+
         print(f"R2 score: {r2}")
         ax.plot(
             lengths,
@@ -67,13 +73,19 @@ def plot(
             color="C1",
         )
     elif dim == 3:
-        opt_params, _ = opt.curve_fit(growth_model_3, lengths, observable_mean, sigma=observable_error, absolute_sigma=True)
+        opt_params, _ = opt.curve_fit(
+            growth_model_3,
+            lengths,
+            observable_mean,
+            sigma=observable_error,
+            absolute_sigma=True,
+        )
         y_true = observable_mean
         y_pred = opt_params[0] * lengths ** (6 / 5)
         ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true))** 2) 
+        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
         r2 = 1 - ss_res / ss_tot
-        
+
         print(f"R2 score: {r2}")
         ax.plot(
             lengths,
@@ -102,8 +114,12 @@ def plot(
     fig.savefig(file_name)
     plt.close()
 
+
 def plot_animation(
-    chains: NDArray[np.float64], alive: NDArray[np.bool], idxs: NDArray[np.int64], dimension: int
+    chains: NDArray[np.float64],
+    alive: NDArray[np.bool],
+    idxs: NDArray[np.int64],
+    dimension: int,
 ):
     """
     Create an animation of the polymer path for the `idxs` polymers
@@ -118,46 +134,54 @@ def plot_animation(
     if dimension == 2:
         ax = fig.add_subplot()
     elif dimension == 3:
-        ax = fig.add_subplot(projection='3d')
+        ax = fig.add_subplot(projection="3d")
     title = ax.set_title("selected polymers at step 0")
 
     def update(num, data, lines, title):
         title.set_text(f"selected polymers at step {num}")
         for i, line in enumerate(lines):
             if sorted_len[-idxs[i]] > num:
-                line.set_data(data[-idxs[i],:num+1,:2].T)
+                line.set_data(data[-idxs[i], : num + 1, :2].T)
                 if dimension == 3:
-                    line.set_3d_properties(data[-idxs[i],:num+1,2].T)
+                    line.set_3d_properties(data[-idxs[i], : num + 1, 2].T)
 
     lens = sorted_len[-idxs]
 
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
     if dimension == 2:
-        ax.set_xlim([np.min(sorted[-idxs,:,0]) - 0.5, np.max(sorted[-idxs,:,0]) + 0.5])
-        ax.set_ylim([np.min(sorted[-idxs,:,1]) - 0.5, np.max(sorted[-idxs,:,1]) + 0.5])
+        ax.set_xlim(
+            [np.min(sorted[-idxs, :, 0]) - 0.5, np.max(sorted[-idxs, :, 0]) + 0.5]
+        )
+        ax.set_ylim(
+            [np.min(sorted[-idxs, :, 1]) - 0.5, np.max(sorted[-idxs, :, 1]) + 0.5]
+        )
     elif dimension == 3:
-        ax.set_zlabel('Z')
-        ax.set_xlim3d([np.min(sorted[-idxs,:,0]) - 0.5, np.max(sorted[-idxs,:,0]) + 0.5])
-        ax.set_ylim3d([np.min(sorted[-idxs,:,1]) - 0.5, np.max(sorted[-idxs,:,1]) + 0.5])
-        ax.set_zlim3d([np.min(sorted[-idxs,:,2]) - 0.5, np.max(sorted[-idxs,:,2]) + 0.5])
-
+        ax.set_zlabel("Z")
+        ax.set_xlim3d(
+            [np.min(sorted[-idxs, :, 0]) - 0.5, np.max(sorted[-idxs, :, 0]) + 0.5]
+        )
+        ax.set_ylim3d(
+            [np.min(sorted[-idxs, :, 1]) - 0.5, np.max(sorted[-idxs, :, 1]) + 0.5]
+        )
+        ax.set_zlim3d(
+            [np.min(sorted[-idxs, :, 2]) - 0.5, np.max(sorted[-idxs, :, 2]) + 0.5]
+        )
 
     lines = []
     for idx in idxs:
         if dimension == 2:
-            line, = ax.plot(
-                sorted[-idx,0:1,0],
-                sorted[-idx,0:1,1])
+            (line,) = ax.plot(sorted[-idx, 0:1, 0], sorted[-idx, 0:1, 1])
         elif dimension == 3:
-            line, = ax.plot(
-                sorted[-idx,0:1,0],
-                sorted[-idx,0:1,1],
-                sorted[-idx,0:1,2])
+            (line,) = ax.plot(
+                sorted[-idx, 0:1, 0], sorted[-idx, 0:1, 1], sorted[-idx, 0:1, 2]
+            )
         lines.append(line)
 
-    ani = animation.FuncAnimation(fig, update, np.max(lens), fargs=(sorted, lines, title), blit=False)
-    ani.save('polymers.mp4', writer='ffmpeg', fps=20)
+    ani = animation.FuncAnimation(
+        fig, update, np.max(lens), fargs=(sorted, lines, title), blit=False
+    )
+    ani.save("polymers.mp4", writer="ffmpeg", fps=20)
 
 
 def plot_gyration(

@@ -15,6 +15,8 @@ from polymer_code import utilities, simulate, plots, observables
 
 assert next_sides_function != simulate.get_allowed_sides_2d or dimension == 2
 assert next_sides_function != simulate.get_allowed_sides_2d_free or dimension == 2
+assert next_sides_function != simulate.get_allowed_sides_triangle or dimension == 2
+assert next_sides_function != simulate.get_allowed_sides_hexagon or dimension == 2
 assert next_sides_function != simulate.get_allowed_sides_3d or dimension == 3
 assert next_sides_function != simulate.get_allowed_sides_3d_free or dimension == 3
 
@@ -53,7 +55,5 @@ if "gyration" in to_plot:
 
 if "animation" in to_plot:
     # the indices to plot (1 is the longest, 2 the second longest, etc.)
-    idxs = np.array([i for i in range(1,17)])
-    plots.plot_animation(
-        chains, alive, idxs, dimension
-    )
+    idxs = np.array([i for i in range(1, 17)])
+    plots.plot_animation(chains, alive, idxs, dimension)
