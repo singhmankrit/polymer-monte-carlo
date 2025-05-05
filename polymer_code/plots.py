@@ -192,6 +192,7 @@ def plot_gyration(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    shape: str,
 ):
     """
     Creates a plot for the gyration with a twinx that contains
@@ -204,6 +205,7 @@ def plot_gyration(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        shape (str): the shape of the lattice
     """
     plot(
         lengths,
@@ -214,7 +216,7 @@ def plot_gyration(
         max_step,
         "Length dependent radius of Gyration",
         r"Radius of Gyration ($\sigma^2$)",
-        "gyration",
+        "Gyration for " + shape + " lattice "+ str(dim) + "D",
         "gyration.png",
     )
 
@@ -226,6 +228,7 @@ def plot_end_to_end(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    shape: str,
 ):
     """
     Creates a plot for the end-to-end distance with a twinx that contains
@@ -238,6 +241,7 @@ def plot_end_to_end(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        shape (str): the shape of the lattice
     """
     plot(
         lengths,
@@ -248,7 +252,7 @@ def plot_end_to_end(
         max_step,
         "Length dependent end-to-end distance",
         r"end to end dist ($\sigma^2$)",
-        "end-to-end",
+        "End-To-End distance for " + shape + " lattice "+ str(dim) + "D",
         "end_to_end.png",
     )
 
