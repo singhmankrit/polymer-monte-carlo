@@ -162,8 +162,8 @@ Animation of polymers in 3D
 
 ### Planning
 
-- [ ] Add seed for consistent comparisons @rjuyal
-- [ ] Fine tune threshold @rjuyal
+- [x] Add seed for consistent comparisons @rjuyal
+- [x] Fine tune threshold @rjuyal
 - [x] Try different lattice like hexagon and triangle @mankritsingh
 - [x] Profile performance @npaarts
 
@@ -211,6 +211,12 @@ This greatly reduced the resources the function needed so we're left with the fo
 These improvements turned out to be quite significant together, while it may still be possible
 to improve the calculations of gyration further I didn't see value in the extra effort for now since
 everything is already quite performant.
+
+@rjuyal
+
+I fine tuned the threshold and added seed; both can be set in config (!18). I also reviewed merge requests. 
+
+Regarding this week's goals, we have already finished implementing PERM and have included the errors in the plots. 
 
 ## Reminder final deadline
 
