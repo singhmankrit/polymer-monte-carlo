@@ -35,7 +35,12 @@ def find_gyration(
     Returns
         ndarray(max_step): the gyration for the chain at each length (where it is alive)
     """
-    max_step = alive.size
+    # there is no need to calculate further than the first dead spot
+    max_steps = np.where(alive == False)[0]
+    if max_steps.size > 0:
+        max_step = max_steps[0]
+    else:
+        max_step = alive.size
     # the middle point (coordinates axis 1) up to length (axis 0)
     center = np.array(
         [
@@ -57,7 +62,7 @@ def find_gyration(
             for length in range(0, max_step)
         ]
     )
-    return temp[alive]
+    return temp
 
 
 def find_observables(
