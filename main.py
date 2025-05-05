@@ -10,7 +10,6 @@ from polymer_code import utilities, simulate, plots, observables
     w_high,
     dimension,
     next_sides_function,
-    graph_exp,
     to_plot,
     seed,
     threshold
@@ -47,7 +46,7 @@ if "e2e" in to_plot:
         weights[:, :max_step], axis=0
     )
     plots.plot_end_to_end(
-        lengths, end_to_ends, weights[:, :max_step], dimension, alive, max_step, graph_exp
+        lengths, end_to_ends, weights[:, :max_step], dimension, alive, max_step
     )
 
 if "gyration" in to_plot:
@@ -55,7 +54,7 @@ if "gyration" in to_plot:
         weights[:, :max_step], axis=0
     )
     plots.plot_gyration(
-        lengths, gyrations, weights[:, :max_step], dimension, alive, max_step, graph_exp
+        lengths, gyrations, weights[:, :max_step], dimension, alive, max_step
     )
 
 if "animation" in to_plot:
