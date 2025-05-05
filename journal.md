@@ -167,6 +167,28 @@ Animation of polymers in 3D
 - [ ] Try different lattice like hexagon and triangle @mankritsingh
 - [ ] Profile performance @npaarts
 
+@mankritsingh
+
+I worked on extending our code to non-squared lattice (triangle and hexagon) in Merge Request !17 \
+Made the graph exponent free to optimize and fixed some bugs / improved plot titles in !21 \
+Reviewed other Merge Requests
+
+Triangular lattice: \
+![](./journal/week3/triangle_lattice.mp4)
+
+![](./journal/week3/tri_gyration.png)
+
+![](./journal/week3/tri_end_to_end.png)
+
+Hexagonal lattice: \
+![](./journal/week3/hexagon_lattice.mp4)
+
+![](./journal/week3/hex_gyration.png)
+
+![](./journal/week3/hex_end_to_end.png)
+
+We observe that the end-to-end and gyration graphs approximately similar to the squared lattice.
+
 ## Reminder final deadline
 
 The deadline for project 2 is **13 May 23:59**. By then, you must have uploaded the report to the repository, and the repository must contain the latest version of the code.
