@@ -71,7 +71,7 @@ def plot(
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (graph_exp),
-            label=f"best fit: ${opt_params[0]:.03f} L^{graph_exp}$ R2 Score: {r2:.03f}",
+            label=f"best fit: ${opt_params[0]:.03f} L^{{{graph_exp:.2f}}}$ R2 Score: {r2:.03f}",
             color="C1",
         )
     elif dim == 3:

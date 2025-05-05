@@ -33,7 +33,7 @@ def parse_config(file_path: str):
         float: the upper weight bound for PERM
         int: the dimensionality of each point
         function: the function to randomly sample the next allowed point for a polymer
-        float: the exponent for to compare the graphs (only for 2D)
+        float: the exponent to compare the graphs (only for 2D)
         list: types of output to generate (`e2e`, `gyration`, `animation`)
     """
     with open(file_path) as file:
