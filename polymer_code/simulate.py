@@ -123,7 +123,8 @@ def get_allowed_sides_triangle(
         list: list of valid coordinates for the next step
     """
     current_position = chain[step, :]
-    sqrt_3_by_2 = np.sqrt(3).round(3) / 2
+    sqrt_3_by_2 = np.sqrt(3).round(4) / 2
+    tolerance = 1e-3
     return [
         new_position
         for new_position in [
@@ -134,7 +135,7 @@ def get_allowed_sides_triangle(
             current_position + np.array([-sqrt_3_by_2, 1 / 2]),
             current_position + np.array([-sqrt_3_by_2, -1 / 2]),
         ]
-        if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
+        if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)) or step == 0)
     ]
 
 
@@ -152,7 +153,8 @@ def get_allowed_sides_hexagon(
         list: list of valid coordinates for the next step
     """
     current_position = chain[step, :]
-    sqrt_3_by_2 = np.sqrt(3).round(3) / 2
+    sqrt_3_by_2 = np.sqrt(3).round(4) / 2
+    tolerance = 1e-3
     if step % 2 == 0:
         return [
             new_position
@@ -161,7 +163,7 @@ def get_allowed_sides_hexagon(
                 current_position + np.array([sqrt_3_by_2, 1 / 2]),
                 current_position + np.array([-sqrt_3_by_2, 1 / 2]),
             ]
-            if (not (chain[:step] == new_position).all(axis=1).any() or step == 0)
+            if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)) or step == 0)
         ]
     else:
         return [
@@ -171,7 +173,7 @@ def get_allowed_sides_hexagon(
                 current_position + np.array([sqrt_3_by_2, -1 / 2]),
                 current_position + np.array([-sqrt_3_by_2, -1 / 2]),
             ]
-            if (not (chain[:step] == new_position).all(axis=1).any())
+            if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)))
         ]
 
 
