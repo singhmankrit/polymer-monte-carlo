@@ -16,6 +16,7 @@ def plot(
     label: str,
     title: str,
     file_name: str,
+    graph_exp: float,
 ):
     """
     Creates a plot for a length-dependent observable with a twinx that contains
@@ -32,6 +33,7 @@ def plot(
         label (str): the name for the label in the legend
         title (str): the title for the plot
         file_name (str): what file to save the plot to
+        graph_exp (float): the exponent to compare graphs
     """
     observable_mean, observable_error = analytical_error(r2, weights, alive)
     observable_error = np.where(observable_error <= 1e-2, 1e-2, observable_error)
@@ -53,14 +55,14 @@ def plot(
     # Fit model depending on dimension
     if dim == 2:
         opt_params, _ = opt.curve_fit(
-            growth_model,
+            growth_model_custom,
             lengths,
             observable_mean,
             sigma=observable_error,
             absolute_sigma=True,
         )
         y_true = observable_mean
-        y_pred = opt_params[0] * lengths ** (3 / 2)
+        y_pred = opt_params[0] * lengths ** (graph_exp)
         ss_res = np.sum((y_true - y_pred) ** 2)
         ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
         r2 = 1 - ss_res / ss_tot
@@ -68,8 +70,8 @@ def plot(
         print(f"R2 score: {r2}")
         ax.plot(
             lengths,
-            opt_params[0] * lengths ** (3 / 2),
-            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$ R2 Score: {r2:.03f}",
+            opt_params[0] * lengths ** (graph_exp),
+            label=f"best fit: ${opt_params[0]:.03f} L^{graph_exp}$ R2 Score: {r2:.03f}",
             color="C1",
         )
     elif dim == 3:
@@ -191,6 +193,7 @@ def plot_gyration(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    graph_exp: float,
 ):
     """
     Creates a plot for the gyration with a twinx that contains
@@ -203,6 +206,7 @@ def plot_gyration(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        graph_exp (float): the exponent for the graph
     """
     plot(
         lengths,
@@ -215,6 +219,7 @@ def plot_gyration(
         r"Radius of Gyration ($\sigma^2$)",
         "gyration",
         "gyration.png",
+        graph_exp,
     )
 
 
@@ -225,6 +230,7 @@ def plot_end_to_end(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    graph_exp: float,
 ):
     """
     Creates a plot for the end-to-end distance with a twinx that contains
@@ -237,6 +243,7 @@ def plot_end_to_end(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        graph_exp (float): the exponent for the graph
     """
     plot(
         lengths,
@@ -249,6 +256,7 @@ def plot_end_to_end(
         r"end to end dist ($\sigma^2$)",
         "end-to-end",
         "end_to_end.png",
+        graph_exp,
     )
 
 
@@ -270,6 +278,17 @@ def analytical_error(
     denominator = (np.sum(w / np.max(w), axis=0)) ** 2
     error = np.sqrt((N / (N - 1 + 1e-4)) * (numerator / denominator))
     return r2_mean, error
+
+def growth_model_custom(L, A, exp):
+    """
+    a model to fit for the 2D polymer case using custom exponent
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+        exp (float): exponent for the fit
+    """
+    return A * L ** exp
 
 
 def growth_model(L, A):
