@@ -243,7 +243,7 @@ def perm_step(
     step: int,
     amount_of_chains: int,
     perm_weights: tuple[float, float],
-) -> tuple[NDArray[np.float64], NDArray[np.longdouble], NDArray[np.bool]]:
+) -> int:
     """
     Does a step of pruning and enriching on the chains after they were generated.
     Note: modifies `step + 1`.
@@ -254,14 +254,14 @@ def perm_step(
         alive (ndarray): array containing whether the chains are alive at certain lengths
 
     Returns
-        ndarray: array with the chains, including the newly generated ones from Enrichment
-        ndarray: array with the weights, including the increases and reductions for `step + 1`
-        ndarray: array with the alive status, including the modified status of chains that got pruned
+        int: the new amount of chains to grow and work with
     """
     w_low, w_high = perm_weights
-    mean_weight = np.mean(weights[alive[:, step + 1], step + 1])
-    to_add: list[int] = []  # keep track of what polymers got duplicated
+    mean_weight = np.mean(
+        weights[:amount_of_chains][alive[:amount_of_chains, step + 1], step + 1]
+    )
     pruned = 0  # keep track of how many polymers got pruned this step
+    new_amount_of_chains = amount_of_chains
     for chain in range(amount_of_chains):
         if not alive[chain, step + 1]:
             continue
@@ -279,20 +279,11 @@ def perm_step(
         # Enrichment
         elif weights[chain, step + 1] > w_high * mean_weight:
             weights[chain, step + 1] /= 2
-            to_add.append(chain)
-    chains = np.concatenate(
-        [chains] + [chains[np.newaxis, chain, :, :] for chain in to_add],
-        axis=0,
-    )
-    weights = np.concatenate(
-        [weights] + [weights[np.newaxis, chain, :] for chain in to_add],
-        axis=0,
-    )
-    alive = np.concatenate(
-        [alive] + [alive[np.newaxis, chain, :] for chain in to_add],
-        axis=0,
-    )
-    return chains, weights, alive
+            chains[new_amount_of_chains] = chains[chain]
+            weights[new_amount_of_chains] = weights[chain]
+            alive[new_amount_of_chains] = alive[chain]
+            new_amount_of_chains += 1
+    return new_amount_of_chains
 
 
 def grow_polymers(
@@ -306,7 +297,7 @@ def grow_polymers(
     perm_weights: tuple[float, float],
     seed: int,
     threshold: int,
-):
+) -> tuple[int, int, NDArray[np.float64], NDArray[np.bool], NDArray[np.longdouble]]:
     """
     Grows a number of polymers upto a target length, if all polymers get stuck this function returns early.
 
@@ -319,11 +310,18 @@ def grow_polymers(
         perm_weights (float, float): the factors to determine whether to prune or enrich
         seed (int): seed for the random number generator
         threshold (int): how many polymers need to be alive to continue
+
+    Returns
+        int: the maximum chain length that was created
+        int: the amount of chains that were created in total (not only those of maximum length)
+        ndarray: the positions of all chains at every step
+        ndarray: the alive status of all chains at every step
+        ndarray: the weights of all chains at every step
     """
     random.seed(seed)
-    chains, weights, alive = init_polymer_storage(
-        amount_of_chains, target_length, dimension
-    )
+    # 2 is enough with quite a margin for the default config values
+    init_chains = amount_of_chains * (2 if do_perm else 1)
+    chains, weights, alive = init_polymer_storage(init_chains, target_length, dimension)
     with logging_redirect_tqdm():
         for step in trange(target_length):
             for chain in range(amount_of_chains):
@@ -335,24 +333,23 @@ def grow_polymers(
                     next_sides_function,
                 )
             # we use step+1 to get the L'
-            if not alive[:, step + 1].any():
+            if not alive[:amount_of_chains, step + 1].any():
                 LOG.warning(f"All chains died by step {step + 1}, skipping other steps")
                 break
 
             if do_perm:
-                chains, weights, alive = perm_step(
+                amount_of_chains = perm_step(
                     chains, weights, alive, step, amount_of_chains, perm_weights
                 )
-            amount_of_chains = chains.shape[0]
-    alive_counts = np.sum(alive, axis=0)
+    alive_counts = np.sum(alive[:amount_of_chains], axis=0)
     try:
         max_step = np.where(alive_counts <= threshold)[0][0]
     except IndexError:
         max_step = np.max(np.sum(alive, axis=1))
     return (
         max_step,
-        chains.shape[0],
-        chains[:, :max_step, :],
-        alive[:, :max_step],
-        weights[:, :max_step],
+        amount_of_chains,
+        chains[:amount_of_chains, :max_step, :],
+        alive[:amount_of_chains, :max_step],
+        weights[:amount_of_chains, :max_step],
     )

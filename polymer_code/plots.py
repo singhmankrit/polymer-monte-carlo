@@ -59,6 +59,7 @@ def plot(
             observable_mean.astype(np.float64),
             sigma=observable_error.astype(np.float64),
             absolute_sigma=True,
+            nan_policy="omit",
         )
         y_true = observable_mean
         y_pred = opt_params[0] * lengths ** (3 / 2)
@@ -80,6 +81,7 @@ def plot(
             observable_mean,
             sigma=observable_error,
             absolute_sigma=True,
+            nan_policy="omit",
         )
         y_true = observable_mean
         y_pred = opt_params[0] * lengths ** (6 / 5)
