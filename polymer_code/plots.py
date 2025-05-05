@@ -54,8 +54,11 @@ def plot(
     )
     # Fit model depending on dimension
     if dim == 2:
+        def model_fixed_exp(L, A):
+            return growth_model_custom(L, A, graph_exp)
+
         opt_params, _ = opt.curve_fit(
-            growth_model_custom,
+            model_fixed_exp,
             lengths,
             observable_mean,
             sigma=observable_error,
