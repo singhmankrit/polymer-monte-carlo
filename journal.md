@@ -164,7 +164,7 @@ Animation of polymers in 3D
 
 - [ ] Add seed for consistent comparisons @rjuyal
 - [ ] Fine tune threshold @rjuyal
-- [ ] Try different lattice like hexagon and triangle @mankritsingh
+- [x] Try different lattice like hexagon and triangle @mankritsingh
 - [ ] Profile performance @npaarts
 
 @mankritsingh
@@ -174,14 +174,14 @@ Made the graph exponent free to optimize and fixed some bugs / improved plot tit
 Reviewed other Merge Requests
 
 Triangular lattice: \
-![](./journal/week3/triangle_lattice.mp4)
+![](./journal/week3/triangular_lattice.mp4)
 
 ![](./journal/week3/tri_gyration.png)
 
 ![](./journal/week3/tri_end_to_end.png)
 
 Hexagonal lattice: \
-![](./journal/week3/hexagon_lattice.mp4)
+![](./journal/week3/hexagonal_lattice.mp4)
 
 ![](./journal/week3/hex_gyration.png)
 
