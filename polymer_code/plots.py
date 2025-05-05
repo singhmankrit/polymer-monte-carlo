@@ -50,13 +50,14 @@ def plot(
         color="C0",
         label="error",
     )
+
     # Fit model depending on dimension
     if dim == 2:
         opt_params, _ = opt.curve_fit(
             growth_model,
             lengths,
-            observable_mean,
-            sigma=observable_error,
+            observable_mean.astype(np.float64),
+            sigma=observable_error.astype(np.float64),
             absolute_sigma=True,
         )
         y_true = observable_mean
@@ -186,7 +187,7 @@ def plot_animation(
 
 def plot_gyration(
     lengths: NDArray[np.int64],
-    r2: NDArray[np.float64],
+    gyrations: NDArray[np.float64],
     weights: NDArray[np.longdouble],
     dim: int,
     alive: NDArray[np.bool],
@@ -198,7 +199,7 @@ def plot_gyration(
 
     Parameters
         lengths (ndarray): array of the lengths the points are given at, the values for the X-axis
-        r2 (ndarray): array containing the values of the gyration at each length
+        gyrations (ndarray): array containing the values of the gyration at each length
         weights (ndarray): array containing the weights of each of the observables, for calculating error and mean
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
@@ -206,7 +207,7 @@ def plot_gyration(
     """
     plot(
         lengths,
-        r2,
+        gyrations,
         weights,
         dim,
         alive,
@@ -220,7 +221,7 @@ def plot_gyration(
 
 def plot_end_to_end(
     lengths: NDArray[np.int64],
-    r2: NDArray[np.float64],
+    end_to_ends: NDArray[np.float64],
     weights: NDArray[np.longdouble],
     dim: int,
     alive: NDArray[np.bool],
@@ -232,7 +233,7 @@ def plot_end_to_end(
 
     Parameters
         lengths (ndarray): array of the lengths the points are given at, the values for the X-axis
-        r2 (ndarray): array containing the values of the end-to-end distance at each length
+        end_to_ends (ndarray): array containing the values of the end-to-end distance at each length
         weights (ndarray): array containing the weights of each of the observables, for calculating error and mean
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
@@ -240,7 +241,7 @@ def plot_end_to_end(
     """
     plot(
         lengths,
-        r2,
+        end_to_ends,
         weights,
         dim,
         alive,
