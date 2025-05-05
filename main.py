@@ -40,16 +40,24 @@ if "e2e" in to_plot or "gyration" in to_plot:
         amount_of_chains, max_step, chains, alive
     )
 
+shape = "Squared"
+if next_sides_function == simulate.get_allowed_sides_triangle:
+    shape = "Triangular"
+elif next_sides_function == simulate.get_allowed_sides_hexagon:
+    shape = "Hexagonal"
+
 lengths = np.arange(0, max_step)
 if "e2e" in to_plot:
     weighted_end_to_end = np.sum(end_to_ends * weights, axis=0) / np.sum(
         weights, axis=0
     )
-    plots.plot_end_to_end(lengths, end_to_ends, weights, dimension, alive, max_step)
+    plots.plot_end_to_end(
+        lengths, end_to_ends, weights, dimension, alive, max_step, shape
+    )
 
 if "gyration" in to_plot:
     weighted_gyrations = np.sum(gyrations * weights, axis=0) / np.sum(weights, axis=0)
-    plots.plot_gyration(lengths, gyrations, weights, dimension, alive, max_step)
+    plots.plot_gyration(lengths, gyrations, weights, dimension, alive, max_step, shape)
 
 if "animation" in to_plot:
     # the indices to plot (1 is the longest, 2 the second longest, etc.)

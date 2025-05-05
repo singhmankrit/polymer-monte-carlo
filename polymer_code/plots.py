@@ -67,13 +67,35 @@ def plot(
         ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
         r2 = 1 - ss_res / ss_tot
 
-        print(f"R2 score: {r2}")
+        print(f"R2 score (fixed growth exp): {r2}")
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (3 / 2),
-            label=f"best fit: ${opt_params[0]:.03f} L^{{3/2}}$ R2 Score: {r2:.03f}",
+            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{1.5}}$ / R2: {r2:.03f}",
             color="C1",
         )
+
+        opt_params_new, _ = opt.curve_fit(
+            growth_model_custom,
+            lengths,
+            observable_mean.astype(np.float64),
+            sigma=observable_error.astype(np.float64),
+            absolute_sigma=True,
+        )
+        y_true = observable_mean
+        y_pred = opt_params_new[0] * lengths ** (opt_params_new[1])
+        ss_res = np.sum((y_true - y_pred) ** 2)
+        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+        r2 = 1 - ss_res / ss_tot
+
+        print(f"R2 score (variable growth exp): {r2}")
+        ax.plot(
+            lengths,
+            opt_params_new[0] * lengths ** (opt_params_new[1]),
+            label=f"variable exp best fit: ${opt_params_new[0]:.03f} L^{{{opt_params_new[1]:.2f}}}$ / R2: {r2:.03f}",
+            color="C3",
+        )
+
     elif dim == 3:
         opt_params, _ = opt.curve_fit(
             growth_model_3,
@@ -89,11 +111,11 @@ def plot(
         ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
         r2 = 1 - ss_res / ss_tot
 
-        print(f"R2 score: {r2}")
+        print(f"R2 score (fixed growth exp): {r2}")
         ax.plot(
             lengths,
             opt_params[0] * lengths ** (6 / 5),
-            label=f"best fit: ${opt_params[0]:.03f} L^{{6/5}}$ R2 Score: {r2:.03f}",
+            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{6/5}}$ / R2: {r2:.03f}",
             color="C1",
         )
 
@@ -194,6 +216,7 @@ def plot_gyration(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    shape: str,
 ):
     """
     Creates a plot for the gyration with a twinx that contains
@@ -206,6 +229,7 @@ def plot_gyration(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        shape (str): the shape of the lattice
     """
     plot(
         lengths,
@@ -216,7 +240,7 @@ def plot_gyration(
         max_step,
         "Length dependent radius of Gyration",
         r"Radius of Gyration ($\sigma^2$)",
-        "gyration",
+        "Gyration for " + shape + " lattice "+ str(dim) + "D",
         "gyration.png",
     )
 
@@ -228,6 +252,7 @@ def plot_end_to_end(
     dim: int,
     alive: NDArray[np.bool],
     max_step: int,
+    shape: str,
 ):
     """
     Creates a plot for the end-to-end distance with a twinx that contains
@@ -240,6 +265,7 @@ def plot_end_to_end(
         dim (int): the dimension of the simulation, for which fit to use
         alive (ndarray): array containing a mask of when the polymers still exist
         max_step (int): the size of the longest polymer in the dataset
+        shape (str): the shape of the lattice
     """
     plot(
         lengths,
@@ -250,7 +276,7 @@ def plot_end_to_end(
         max_step,
         "Length dependent end-to-end distance",
         r"end to end dist ($\sigma^2$)",
-        "end-to-end",
+        "End-To-End distance for " + shape + " lattice "+ str(dim) + "D",
         "end_to_end.png",
     )
 
@@ -284,6 +310,18 @@ def growth_model(L, A):
         L (float): length to estimate at
     """
     return A * L ** (3 / 2)
+
+
+def growth_model_custom(L, A, exp):
+    """
+    a model to fit for the 2D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+        exp (float): exponent (to be optimized)
+    """
+    return A * L ** (exp)
 
 
 def growth_model_3(L, A):

@@ -164,8 +164,30 @@ Animation of polymers in 3D
 
 - [ ] Add seed for consistent comparisons @rjuyal
 - [ ] Fine tune threshold @rjuyal
-- [ ] Try different lattice like hexagon and triangle @mankritsingh
+- [x] Try different lattice like hexagon and triangle @mankritsingh
 - [x] Profile performance @npaarts
+
+@mankritsingh
+
+I worked on extending our code to non-squared lattice (triangle and hexagon) in Merge Request !17 \
+Made the graph exponent free to optimize and fixed some bugs / improved plot titles in !21 \
+Reviewed other Merge Requests
+
+Triangular lattice: \
+![](./journal/week3/triangular_lattice.mp4)
+
+![](./journal/week3/tri_gyration.png)
+
+![](./journal/week3/tri_end_to_end.png)
+
+Hexagonal lattice: \
+![](./journal/week3/hexagonal_lattice.mp4)
+
+![](./journal/week3/hex_gyration.png)
+
+![](./journal/week3/hex_end_to_end.png)
+
+We observe that the end-to-end and gyration graphs for triangular and hexagonal lattice are approximately similar to the squared lattice.
 
 @npaarts
 
