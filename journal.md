@@ -179,7 +179,7 @@ Triangular lattice: \
 Hexagonal lattice: \
 ![](./journal/week3/hexagon_lattice.mp4)
 
-We observe that the end-to-end and gyration graphs grow slower than the squared lattice in both the above cases.
+We observe that the end-to-end and gyration graphs approximately similar to the squared lattice. The graphs are attached in ![](./journal/week3).
 
 ## Reminder final deadline
 
