@@ -12,7 +12,7 @@ from polymer_code import utilities, simulate, plots, observables
     next_sides_function,
     to_plot,
     seed,
-    threshold
+    threshold,
 ) = utilities.parse_config("config.json")
 
 assert next_sides_function != simulate.get_allowed_sides_2d or dimension == 2
@@ -42,20 +42,14 @@ if "e2e" in to_plot or "gyration" in to_plot:
 
 lengths = np.arange(0, max_step)
 if "e2e" in to_plot:
-    weighted_end_to_end = np.sum(end_to_ends * weights[:, :max_step], axis=0) / np.sum(
-        weights[:, :max_step], axis=0
+    weighted_end_to_end = np.sum(end_to_ends * weights, axis=0) / np.sum(
+        weights, axis=0
     )
-    plots.plot_end_to_end(
-        lengths, end_to_ends, weights[:, :max_step], dimension, alive, max_step
-    )
+    plots.plot_end_to_end(lengths, end_to_ends, weights, dimension, alive, max_step)
 
 if "gyration" in to_plot:
-    weighted_gyrations = np.sum(gyrations * weights[:, :max_step], axis=0) / np.sum(
-        weights[:, :max_step], axis=0
-    )
-    plots.plot_gyration(
-        lengths, gyrations, weights[:, :max_step], dimension, alive, max_step
-    )
+    weighted_gyrations = np.sum(gyrations * weights, axis=0) / np.sum(weights, axis=0)
+    plots.plot_gyration(lengths, gyrations, weights, dimension, alive, max_step)
 
 if "animation" in to_plot:
     # the indices to plot (1 is the longest, 2 the second longest, etc.)
