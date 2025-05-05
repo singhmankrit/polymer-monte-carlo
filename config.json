@@ -6,7 +6,11 @@
 	"w_high": 3.16,
 	"dimension": 2,
 	"next_sides_function": "simulate.get_allowed_sides_2d",
-	"outputs": ["e2e", "gyration", "animation"],
-    "seed": 0,
+	"outputs": [
+		"e2e",
+		"gyration",
+		"animation"
+	],
+	"seed": 0,
 	"threshold": 100
 }

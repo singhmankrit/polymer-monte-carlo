@@ -165,7 +165,7 @@ Animation of polymers in 3D
 - [ ] Add seed for consistent comparisons @rjuyal
 - [ ] Fine tune threshold @rjuyal
 - [x] Try different lattice like hexagon and triangle @mankritsingh
-- [ ] Profile performance @npaarts
+- [x] Profile performance @npaarts
 
 @mankritsingh
 
@@ -188,6 +188,29 @@ Hexagonal lattice: \
 ![](./journal/week3/hex_end_to_end.png)
 
 We observe that the end-to-end and gyration graphs for triangular and hexagonal lattice are approximately similar to the squared lattice.
+
+@npaarts
+
+After I came back from my holiday I worked on profiling and optimising our code.
+I started by making a flamegraph of the state before optimising so I didn't optimise already fast enough code.
+![[view full image](./journal/week3/pre-opt.svg)](./journal/week3/pre-opt.png)
+
+From this I could quickly spot two main bottlenecks, the function to calculate the gyration
+and the function that did PERM for a simulation steps. I started by focussing on the calculations of the gyration.
+
+For this part I found that we were doing an `O(n^2)` calculation for an unneccesarily big `n`,
+after reducing the maximum we calculated to only be the neccesary value we get the following flamegraph.
+![[view full image](./journal/week3/gyration-max-step.svg)](./journal/week3/gyration-max-step.png)
+
+Now the biggest performance cost was the PERM step, especially the part where we were concatenating
+the enriched chains to the big arrays. I fixed this issue by allocating a 50% extra at the start
+(with the default config only about 15% extra chains get generated) so that no re-allocations need to happen.
+This greatly reduced the resources the function needed so we're left with the following performance chart.
+![[view full image](./journal/week3/perm-no-concat.svg)](./journal/week3/perm-no-concat.png)
+
+These improvements turned out to be quite significant together, while it may still be possible
+to improve the calculations of gyration further I didn't see value in the extra effort for now since
+everything is already quite performant.
 
 ## Reminder final deadline
 
