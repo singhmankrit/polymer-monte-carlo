@@ -187,7 +187,7 @@ Hexagonal lattice: \
 
 ![](./journal/week3/hex_end_to_end.png)
 
-We observe that the end-to-end and gyration graphs approximately similar to the squared lattice.
+We observe that the end-to-end and gyration graphs for triangular and hexagonal lattice are approximately similar to the squared lattice.
 
 ## Reminder final deadline
 
