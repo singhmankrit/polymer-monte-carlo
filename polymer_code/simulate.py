@@ -158,35 +158,19 @@ def get_allowed_sides_hexagon(
     current_position = chain[step, :]
     sqrt_3_by_2 = np.sqrt(3).round(4) / 2
     tolerance = 1e-3
-    if step % 2 == 0:
-        return [
-            new_position
-            for new_position in [
-                current_position + np.array([0, -1]),
-                current_position + np.array([sqrt_3_by_2, 1 / 2]),
-                current_position + np.array([-sqrt_3_by_2, 1 / 2]),
-            ]
-            if (
-                not np.any(
-                    np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)
-                )
-                or step == 0
-            )
+    step_half = 1 / 2 - step % 2
+    return [
+        new_position
+        for new_position in [
+            current_position + np.array([0, -2 * step_half]),
+            current_position + np.array([sqrt_3_by_2, step_half]),
+            current_position + np.array([-sqrt_3_by_2, step_half]),
         ]
-    else:
-        return [
-            new_position
-            for new_position in [
-                current_position + np.array([0, 1]),
-                current_position + np.array([sqrt_3_by_2, -1 / 2]),
-                current_position + np.array([-sqrt_3_by_2, -1 / 2]),
-            ]
-            if (
-                not np.any(
-                    np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)
-                )
-            )
-        ]
+        if (
+            not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1))
+            or step == 0
+        )
+    ]
 
 
 def do_step(
