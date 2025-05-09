@@ -74,28 +74,6 @@ def plot(
             label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{1.5}}$ / R2: {r2:.03f}",
             color="C1",
         )
-
-        opt_params_new, _ = opt.curve_fit(
-            growth_model_custom,
-            lengths,
-            observable_mean.astype(np.float64),
-            sigma=observable_error.astype(np.float64),
-            absolute_sigma=True,
-        )
-        y_true = observable_mean
-        y_pred = opt_params_new[0] * lengths ** (opt_params_new[1])
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
-
-        print(f"R2 score (variable growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params_new[0] * lengths ** (opt_params_new[1]),
-            label=f"variable exp best fit: ${opt_params_new[0]:.03f} L^{{{opt_params_new[1]:.2f}}}$ / R2: {r2:.03f}",
-            color="C3",
-        )
-
     elif dim == 3:
         opt_params, _ = opt.curve_fit(
             growth_model_3,
@@ -118,6 +96,27 @@ def plot(
             label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{6/5}}$ / R2: {r2:.03f}",
             color="C1",
         )
+
+    opt_params_new, _ = opt.curve_fit(
+        growth_model_custom,
+        lengths,
+        observable_mean.astype(np.float64),
+        sigma=observable_error.astype(np.float64),
+        absolute_sigma=True,
+    )
+    y_true = observable_mean
+    y_pred = opt_params_new[0] * lengths ** (opt_params_new[1])
+    ss_res = np.sum((y_true - y_pred) ** 2)
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+    r2 = 1 - ss_res / ss_tot
+
+    print(f"R2 score (variable growth exp): {r2}")
+    ax.plot(
+        lengths,
+        opt_params_new[0] * lengths ** (opt_params_new[1]),
+        label=f"variable exp best fit: ${opt_params_new[0]:.03f} L^{{{opt_params_new[1]:.2f}}}$ / R2: {r2:.03f}",
+        color="C3",
+    )
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
