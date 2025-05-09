@@ -146,6 +146,15 @@ def plot_animation(
     title = ax.set_title("selected polymers at step 0")
 
     def update(num, data, lines, title):
+        """
+        Helper function for creating the animation
+
+        Parameters
+            num (int): what frame the animation is currently
+            data (ndarray): array containing the data for the animation
+            lines (enumerable(Line)): enumerable of the matplotlib Line objects
+            title (Title): matplotlib title object
+        """
         title.set_text(f"selected polymers at step {num}")
         for i, line in enumerate(lines):
             if sorted_len[-idxs[i]] > num:
