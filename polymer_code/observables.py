@@ -84,7 +84,7 @@ def find_observables(
     """
     end_to_ends = np.zeros((amount_of_chains, max_step))
     gyrations = np.zeros((amount_of_chains, max_step))
-    for chain in trange(amount_of_chains):
+    for chain in trange(amount_of_chains, desc="Observables"):
         end_to_ends[chain, alive[chain]] = find_end_to_end(chains[chain], alive[chain])
         gyrations[chain, alive[chain]] = find_gyration(chains[chain], alive[chain])
     return end_to_ends, gyrations

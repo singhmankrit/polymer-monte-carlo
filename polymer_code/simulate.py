@@ -324,7 +324,7 @@ def grow_polymers(
     init_chains = amount_of_chains * (2 if do_perm else 1)
     chains, weights, alive = init_polymer_storage(init_chains, target_length, dimension)
     with logging_redirect_tqdm():
-        for step in trange(target_length):
+        for step in trange(target_length, desc="Length"):
             for chain in range(amount_of_chains):
                 do_step(
                     chains[chain, :, :],
