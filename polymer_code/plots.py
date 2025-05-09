@@ -239,7 +239,7 @@ def plot_gyration(
         max_step,
         "Length dependent radius of Gyration",
         r"Radius of Gyration ($\sigma^2$)",
-        "Gyration for " + shape + " lattice "+ str(dim) + "D",
+        "Gyration for " + shape + " lattice " + str(dim) + "D",
         "gyration.png",
     )
 
@@ -275,7 +275,7 @@ def plot_end_to_end(
         max_step,
         "Length dependent end-to-end distance",
         r"end to end dist ($\sigma^2$)",
-        "End-To-End distance for " + shape + " lattice "+ str(dim) + "D",
+        "End-To-End distance for " + shape + " lattice " + str(dim) + "D",
         "end_to_end.png",
     )
 
