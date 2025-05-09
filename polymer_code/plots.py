@@ -125,6 +125,12 @@ def plot_animation(
 ):
     """
     Create an animation of the polymer path for the `idxs` polymers
+
+    Parameters
+        chains (ndarray): array with all the positions of the chains at every timestep
+        alive (ndarray): status of the chains at every length
+        idxs (ndarray): array of indeces containing what chains to plot (chains are sorted from long to short)
+        dimension (int): the dimension of the chain coordinates
     """
 
     alive_sum = np.sum(alive, axis=1)
@@ -268,6 +274,10 @@ def analytical_error(
         r2 (ndarray): array containing the values of the observable at each length for each chain
         w (ndarray): array containing the weights for each length of each chain
         alive (ndarray): array containing a boolean mask of whether the chain exists at a length
+
+    Returns
+        ndarray: array containing the mean value for each length
+        ndarray: array containing the standard deviation for each length
     """
     _, max_step = r2.shape
     N = np.sum(alive[:, :max_step], axis=0)
@@ -285,8 +295,25 @@ def growth_model(L, A):
     Parameters
         A (float): scaling factor for the fit
         L (float): length to estimate at
+
+    Returns
+        float: result from filling the values in the model for a 2D lattice
     """
     return A * L ** (3 / 2)
+
+
+def growth_model_3(L, A):
+    """
+    a model to fit for the 3D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+
+    Returns
+        float: result from filling the values in the model for a 3D lattice
+    """
+    return A * L ** (6 / 5)
 
 
 def growth_model_custom(L, A, exp):
@@ -297,16 +324,8 @@ def growth_model_custom(L, A, exp):
         A (float): scaling factor for the fit
         L (float): length to estimate at
         exp (float): exponent (to be optimized)
+
+    Returns
+        float: result from filling the values in the model with exponent estimation
     """
     return A * L ** (exp)
-
-
-def growth_model_3(L, A):
-    """
-    a model to fit for the 3D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
-
-    Parameters
-        A (float): scaling factor for the fit
-        L (float): length to estimate at
-    """
-    return A * L ** (6 / 5)
