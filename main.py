@@ -8,19 +8,26 @@ from polymer_code import utilities, simulate, plots, observables
     do_perm,
     w_low,
     w_high,
-    dimension,
     next_sides_function,
     to_plot,
     seed,
     threshold,
 ) = utilities.parse_config("config.json")
 
-assert next_sides_function != simulate.get_allowed_sides_2d or dimension == 2
-assert next_sides_function != simulate.get_allowed_sides_2d_free or dimension == 2
-assert next_sides_function != simulate.get_allowed_sides_triangle or dimension == 2
-assert next_sides_function != simulate.get_allowed_sides_hexagon or dimension == 2
-assert next_sides_function != simulate.get_allowed_sides_3d or dimension == 3
-assert next_sides_function != simulate.get_allowed_sides_3d_free or dimension == 3
+if next_sides_function in [
+    simulate.get_allowed_sides_2d,
+    simulate.get_allowed_sides_2d_free,
+    simulate.get_allowed_sides_triangle,
+    simulate.get_allowed_sides_hexagon,
+]:
+    dimension = 2
+elif next_sides_function in [
+    simulate.get_allowed_sides_3d,
+    simulate.get_allowed_sides_3d_free,
+]:
+    dimension = 3
+else:
+    raise ValueError("next_sides_function does not have a defined dimension")
 
 max_step, amount_of_chains, chains, alive, weights = simulate.grow_polymers(
     amount_of_chains,
