@@ -55,14 +55,12 @@ def find_gyration(
 
     # distance per length (axis 1), per particle (axis 0)
     clens = np.sum(cdiffs * cdiffs, axis=-1)
-    # this can probably be done better (using masking or triu maybe) but works for now
-    temp = np.array(
+    return np.array(
         [
             np.sum(clens[: length + 1, length]) / (length + 1)
             for length in range(0, max_step)
         ]
     )
-    return temp
 
 
 def find_observables(
@@ -88,6 +86,5 @@ def find_observables(
     gyrations = np.zeros((amount_of_chains, max_step))
     for chain in trange(amount_of_chains):
         end_to_ends[chain, alive[chain]] = find_end_to_end(chains[chain], alive[chain])
-
         gyrations[chain, alive[chain]] = find_gyration(chains[chain], alive[chain])
     return end_to_ends, gyrations
