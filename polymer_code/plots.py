@@ -51,51 +51,29 @@ def plot(
         label="error",
     )
 
-    # Fit model depending on dimension
-    if dim == 2:
-        opt_params, _ = opt.curve_fit(
-            growth_model,
-            lengths,
-            observable_mean.astype(np.float64),
-            sigma=observable_error.astype(np.float64),
-            absolute_sigma=True,
-            nan_policy="omit",
-        )
-        y_true = observable_mean
-        y_pred = opt_params[0] * lengths ** (3 / 2)
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
+    (model, exp) = (growth_model, 1.5) if dim == 2 else (growth_model_3, 1.2)
 
-        print(f"R2 score (fixed growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params[0] * lengths ** (3 / 2),
-            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{1.5}}$ / R2: {r2:.03f}",
-            color="C1",
-        )
-    elif dim == 3:
-        opt_params, _ = opt.curve_fit(
-            growth_model_3,
-            lengths,
-            observable_mean,
-            sigma=observable_error,
-            absolute_sigma=True,
-            nan_policy="omit",
-        )
-        y_true = observable_mean
-        y_pred = opt_params[0] * lengths ** (6 / 5)
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
+    opt_params, _ = opt.curve_fit(
+        model,
+        lengths,
+        observable_mean.astype(np.float64),
+        sigma=observable_error.astype(np.float64),
+        absolute_sigma=True,
+        nan_policy="omit",
+    )
+    y_true = observable_mean
+    y_pred = opt_params[0] * lengths**exp
+    ss_res = np.sum((y_true - y_pred) ** 2)
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+    r2 = 1 - ss_res / ss_tot
 
-        print(f"R2 score (fixed growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params[0] * lengths ** (6 / 5),
-            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{6/5}}$ / R2: {r2:.03f}",
-            color="C1",
-        )
+    print(f"R2 score (fixed growth exp): {r2}")
+    ax.plot(
+        lengths,
+        opt_params[0] * lengths**exp,
+        label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{{exp}}}$ / R2: {r2:.03f}",
+        color="C1",
+    )
 
     opt_params_new, _ = opt.curve_fit(
         growth_model_custom,
