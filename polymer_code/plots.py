@@ -51,73 +51,50 @@ def plot(
         label="error",
     )
 
-    # Fit model depending on dimension
-    if dim == 2:
-        opt_params, _ = opt.curve_fit(
-            growth_model,
-            lengths,
-            observable_mean.astype(np.float64),
-            sigma=observable_error.astype(np.float64),
-            absolute_sigma=True,
-            nan_policy="omit",
-        )
-        y_true = observable_mean
-        y_pred = opt_params[0] * lengths ** (3 / 2)
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
+    (model, exp) = (growth_model, 1.5) if dim == 2 else (growth_model_3, 1.2)
 
-        print(f"R2 score (fixed growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params[0] * lengths ** (3 / 2),
-            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{1.5}}$ / R2: {r2:.03f}",
-            color="C1",
-        )
+    opt_params_fixed, _ = opt.curve_fit(
+        model,
+        lengths,
+        observable_mean.astype(np.float64),
+        sigma=observable_error.astype(np.float64),
+        absolute_sigma=True,
+        nan_policy="omit",
+    )
+    y_true = observable_mean
+    y_pred = opt_params_fixed[0] * lengths**exp
+    ss_res = np.sum((y_true - y_pred) ** 2)
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+    r2 = 1 - ss_res / ss_tot
 
-        opt_params_new, _ = opt.curve_fit(
-            growth_model_custom,
-            lengths,
-            observable_mean.astype(np.float64),
-            sigma=observable_error.astype(np.float64),
-            absolute_sigma=True,
-        )
-        y_true = observable_mean
-        y_pred = opt_params_new[0] * lengths ** (opt_params_new[1])
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
+    print(f"R2 score (fixed growth exp): {r2}")
+    ax.plot(
+        lengths,
+        opt_params_fixed[0] * lengths**exp,
+        label=f"fixed exp best fit: ${opt_params_fixed[0]:.03f} L^{{{exp}}}$ / R2: {r2:.03f}",
+        color="C1",
+    )
 
-        print(f"R2 score (variable growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params_new[0] * lengths ** (opt_params_new[1]),
-            label=f"variable exp best fit: ${opt_params_new[0]:.03f} L^{{{opt_params_new[1]:.2f}}}$ / R2: {r2:.03f}",
-            color="C3",
-        )
+    opt_params_variable, _ = opt.curve_fit(
+        growth_model_custom,
+        lengths,
+        observable_mean.astype(np.float64),
+        sigma=observable_error.astype(np.float64),
+        absolute_sigma=True,
+    )
+    y_true = observable_mean
+    y_pred = opt_params_variable[0] * lengths ** (opt_params_variable[1])
+    ss_res = np.sum((y_true - y_pred) ** 2)
+    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+    r2 = 1 - ss_res / ss_tot
 
-    elif dim == 3:
-        opt_params, _ = opt.curve_fit(
-            growth_model_3,
-            lengths,
-            observable_mean,
-            sigma=observable_error,
-            absolute_sigma=True,
-            nan_policy="omit",
-        )
-        y_true = observable_mean
-        y_pred = opt_params[0] * lengths ** (6 / 5)
-        ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-        r2 = 1 - ss_res / ss_tot
-
-        print(f"R2 score (fixed growth exp): {r2}")
-        ax.plot(
-            lengths,
-            opt_params[0] * lengths ** (6 / 5),
-            label=f"fixed exp best fit: ${opt_params[0]:.03f} L^{{6/5}}$ / R2: {r2:.03f}",
-            color="C1",
-        )
+    print(f"R2 score (variable growth exp): {r2}")
+    ax.plot(
+        lengths,
+        opt_params_variable[0] * lengths ** (opt_params_variable[1]),
+        label=f"variable exp best fit: ${opt_params_variable[0]:.03f} L^{{{opt_params_variable[1]:.2f}}}$ / R2: {r2:.03f}",
+        color="C3",
+    )
 
     # Show number of polymers on secondary y-axis
     ax_right = ax.twinx()
@@ -148,6 +125,12 @@ def plot_animation(
 ):
     """
     Create an animation of the polymer path for the `idxs` polymers
+
+    Parameters
+        chains (ndarray): array with all the positions of the chains at every timestep
+        alive (ndarray): status of the chains at every length
+        idxs (ndarray): array of indeces containing what chains to plot (chains are sorted from long to short)
+        dimension (int): the dimension of the chain coordinates
     """
 
     alive_sum = np.sum(alive, axis=1)
@@ -163,6 +146,15 @@ def plot_animation(
     title = ax.set_title("selected polymers at step 0")
 
     def update(num, data, lines, title):
+        """
+        Helper function for creating the animation
+
+        Parameters
+            num (int): what frame the animation is currently
+            data (ndarray): array containing the data for the animation
+            lines (enumerable(Line)): enumerable of the matplotlib Line objects
+            title (Title): matplotlib title object
+        """
         title.set_text(f"selected polymers at step {num}")
         for i, line in enumerate(lines):
             if sorted_len[-idxs[i]] > num:
@@ -240,7 +232,7 @@ def plot_gyration(
         max_step,
         "Length dependent radius of Gyration",
         r"Radius of Gyration ($\sigma^2$)",
-        "Gyration for " + shape + " lattice "+ str(dim) + "D",
+        "Gyration for " + shape + " lattice " + str(dim) + "D",
         "gyration.png",
     )
 
@@ -276,7 +268,7 @@ def plot_end_to_end(
         max_step,
         "Length dependent end-to-end distance",
         r"end to end dist ($\sigma^2$)",
-        "End-To-End distance for " + shape + " lattice "+ str(dim) + "D",
+        "End-To-End distance for " + shape + " lattice " + str(dim) + "D",
         "end_to_end.png",
     )
 
@@ -291,6 +283,10 @@ def analytical_error(
         r2 (ndarray): array containing the values of the observable at each length for each chain
         w (ndarray): array containing the weights for each length of each chain
         alive (ndarray): array containing a boolean mask of whether the chain exists at a length
+
+    Returns
+        ndarray: array containing the mean value for each length
+        ndarray: array containing the standard deviation for each length
     """
     _, max_step = r2.shape
     N = np.sum(alive[:, :max_step], axis=0)
@@ -308,8 +304,25 @@ def growth_model(L, A):
     Parameters
         A (float): scaling factor for the fit
         L (float): length to estimate at
+
+    Returns
+        float: result from filling the values in the model for a 2D lattice
     """
     return A * L ** (3 / 2)
+
+
+def growth_model_3(L, A):
+    """
+    a model to fit for the 3D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
+
+    Parameters
+        A (float): scaling factor for the fit
+        L (float): length to estimate at
+
+    Returns
+        float: result from filling the values in the model for a 3D lattice
+    """
+    return A * L ** (6 / 5)
 
 
 def growth_model_custom(L, A, exp):
@@ -320,16 +333,8 @@ def growth_model_custom(L, A, exp):
         A (float): scaling factor for the fit
         L (float): length to estimate at
         exp (float): exponent (to be optimized)
+
+    Returns
+        float: result from filling the values in the model with exponent estimation
     """
     return A * L ** (exp)
-
-
-def growth_model_3(L, A):
-    """
-    a model to fit for the 3D polymer case from [the lecture notes](https://compphys.quantumtinkerer.tudelft.nl/proj2-polymers/#model-polymers-as-a-self-avoiding-random-walk-on-a-lattice)
-
-    Parameters
-        A (float): scaling factor for the fit
-        L (float): length to estimate at
-    """
-    return A * L ** (6 / 5)

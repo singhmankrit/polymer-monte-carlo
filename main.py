@@ -33,8 +33,6 @@ max_step, amount_of_chains, chains, alive, weights = simulate.grow_polymers(
     threshold,
 )
 
-print(max_step, amount_of_chains)
-
 if "e2e" in to_plot or "gyration" in to_plot:
     end_to_ends, gyrations = observables.find_observables(
         amount_of_chains, max_step, chains, alive

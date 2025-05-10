@@ -135,7 +135,10 @@ def get_allowed_sides_triangle(
             current_position + np.array([-sqrt_3_by_2, 1 / 2]),
             current_position + np.array([-sqrt_3_by_2, -1 / 2]),
         ]
-        if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)) or step == 0)
+        if (
+            not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1))
+            or step == 0
+        )
     ]
 
 
@@ -155,26 +158,19 @@ def get_allowed_sides_hexagon(
     current_position = chain[step, :]
     sqrt_3_by_2 = np.sqrt(3).round(4) / 2
     tolerance = 1e-3
-    if step % 2 == 0:
-        return [
-            new_position
-            for new_position in [
-                current_position + np.array([0, -1]),
-                current_position + np.array([sqrt_3_by_2, 1 / 2]),
-                current_position + np.array([-sqrt_3_by_2, 1 / 2]),
-            ]
-            if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)) or step == 0)
+    step_half = 1 / 2 - step % 2
+    return [
+        new_position
+        for new_position in [
+            current_position + np.array([0, -2 * step_half]),
+            current_position + np.array([sqrt_3_by_2, step_half]),
+            current_position + np.array([-sqrt_3_by_2, step_half]),
         ]
-    else:
-        return [
-            new_position
-            for new_position in [
-                current_position + np.array([0, 1]),
-                current_position + np.array([sqrt_3_by_2, -1 / 2]),
-                current_position + np.array([-sqrt_3_by_2, -1 / 2]),
-            ]
-            if (not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1)))
-        ]
+        if (
+            not np.any(np.all(np.abs(chain[:step] - new_position) < tolerance, axis=1))
+            or step == 0
+        )
+    ]
 
 
 def do_step(
@@ -196,6 +192,9 @@ def do_step(
         alive (ndarray): whether the chain is alive or not
         step (int): the current step to index, do_step will modify the array at `step + 1`
         next_sites_function (function): A function that returns a list of next valid position
+
+    Returns
+        list: list of valid coordinates for the next step
     """
     if not alive[step]:
         return
@@ -325,7 +324,7 @@ def grow_polymers(
     init_chains = amount_of_chains * (2 if do_perm else 1)
     chains, weights, alive = init_polymer_storage(init_chains, target_length, dimension)
     with logging_redirect_tqdm():
-        for step in trange(target_length):
+        for step in trange(target_length, desc="Length"):
             for chain in range(amount_of_chains):
                 do_step(
                     chains[chain, :, :],
