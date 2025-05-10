@@ -244,7 +244,7 @@ def perm_step(
     step: int,
     amount_of_chains: int,
     perm_weights: tuple[float, float],
-) -> int:
+) -> tuple[int, NDArray[np.float64], NDArray[np.longdouble], NDArray[np.bool]]:
     """
     Does a step of pruning and enriching on the chains after they were generated.
     Note: modifies `step + 1`.
@@ -256,12 +256,16 @@ def perm_step(
 
     Returns
         int: the new amount of chains to grow and work with
+        ndarray: array containing the coordinates of the chains at all generated lengths
+        ndarray: array containing the weights of the chains at all generated lengths
+        ndarray: array containing whether the chains are alive at certain lengths
     """
     w_low, w_high = perm_weights
     mean_weight = np.mean(
         weights[:amount_of_chains][alive[:amount_of_chains, step + 1], step + 1]
     )
     pruned = 0  # keep track of how many polymers got pruned this step
+    chain_capacity = chains.shape[0]
     new_amount_of_chains = amount_of_chains
     for chain in range(amount_of_chains):
         if not alive[chain, step + 1]:
@@ -284,7 +288,14 @@ def perm_step(
             weights[new_amount_of_chains] = weights[chain]
             alive[new_amount_of_chains] = alive[chain]
             new_amount_of_chains += 1
-    return new_amount_of_chains
+            if new_amount_of_chains == chain_capacity:
+                LOG.info("more chains than we have capacity, increasing capacity")
+                chains = np.concatenate([chains, np.zeros_like(chains)])
+                weights = np.concatenate([weights, np.zeros_like(weights)])
+                alive = np.concatenate(
+                    [alive, np.broadcast_to(np.array([True]), alive.shape)]
+                )
+    return new_amount_of_chains, chains, weights, alive
 
 
 def grow_polymers(
@@ -339,7 +350,7 @@ def grow_polymers(
                 break
 
             if do_perm:
-                amount_of_chains = perm_step(
+                amount_of_chains, chains, weights, alive = perm_step(
                     chains, weights, alive, step, amount_of_chains, perm_weights
                 )
     alive_counts = np.sum(alive[:amount_of_chains], axis=0)
