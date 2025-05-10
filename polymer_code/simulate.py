@@ -287,7 +287,7 @@ def perm_step(
             alive[new_amount_of_chains] = alive[chain]
             new_amount_of_chains += 1
             if new_amount_of_chains == chain_capacity:
-                LOG.info("more chains than we have capacity, increasing capacity")
+                LOG.warning("more chains than we have capacity, increasing capacity")
                 chains = np.concatenate([chains, np.zeros_like(chains)])
                 weights = np.concatenate([weights, np.zeros_like(weights)])
                 alive = np.concatenate(
