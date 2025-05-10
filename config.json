@@ -4,7 +4,6 @@
 	"do_perm": true,
 	"w_low": 0.316,
 	"w_high": 3.16,
-	"dimension": 2,
 	"next_sides_function": "simulate.get_allowed_sides_2d",
 	"outputs": [
 		"e2e",

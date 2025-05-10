@@ -31,9 +31,10 @@ def parse_config(file_path: str):
         bool: whether to use PERM (True) or Rosenbluth (False)
         float: the lower weight bound for PERM
         float: the upper weight bound for PERM
-        int: the dimensionality of each point
         function: the function to randomly sample the next allowed point for a polymer
         list: types of output to generate (`e2e`, `gyration`, `animation`)
+        int: seed to use for the simulation
+        int: stop plotting if the amount of chains <= treshold
     """
     with open(file_path) as file:
         config: dict[str, Any] = json.load(file)
@@ -56,7 +57,6 @@ def parse_config(file_path: str):
             do_perm,
             w_low,
             w_high,
-            dimension,
             next_sides_function,
             to_output,
             seed,
