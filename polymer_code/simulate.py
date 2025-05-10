@@ -264,7 +264,6 @@ def perm_step(
     mean_weight = np.mean(
         weights[:amount_of_chains][alive[:amount_of_chains, step + 1], step + 1]
     )
-    pruned = 0  # keep track of how many polymers got pruned this step
     chain_capacity = chains.shape[0]
     new_amount_of_chains = amount_of_chains
     for chain in range(amount_of_chains):
@@ -273,7 +272,6 @@ def perm_step(
         # Pruning
         if weights[chain, step + 1] < w_low * mean_weight:
             if random.random() < 0.5:
-                pruned += 1
                 # don't grow this chain anymore
                 alive[chain, step + 1 :] = False
                 # discard the weight at length L'
