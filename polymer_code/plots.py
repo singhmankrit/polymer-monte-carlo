@@ -64,7 +64,7 @@ def plot(
         )
         y_true = observable_mean
         y_pred = opt_params_fixed[0] * lengths**exp
-        ss_res = np.sum((y_true - y_pred) ** 2 / observable_error)
+        ss_res = np.sum(((y_true - y_pred) / observable_error) ** 2)
         ss_tot = np.sum(((y_true - np.mean(y_true)) / observable_error) ** 2)
         r2 = 1 - ss_res / ss_tot
 
@@ -88,7 +88,7 @@ def plot(
         )
         y_true = observable_mean
         y_pred = opt_params_variable[0] * lengths ** (opt_params_variable[1])
-        ss_res = np.sum((y_true - y_pred) ** 2)
+        ss_res = np.sum(((y_true - y_pred) / observable_error) ** 2)
         ss_tot = np.sum(((y_true - np.mean(y_true)) / observable_error) ** 2)
         r2 = 1 - ss_res / ss_tot
 
