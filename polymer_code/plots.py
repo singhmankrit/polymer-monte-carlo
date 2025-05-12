@@ -58,7 +58,7 @@ def plot(
             model,
             lengths,
             observable_mean.astype(np.float64),
-            sigma=np.sqrt(observable_error.astype(np.float64)),
+            sigma=observable_error.astype(np.float64),
             absolute_sigma=True,
             nan_policy="omit",
         )
@@ -83,7 +83,7 @@ def plot(
             growth_model_custom,
             lengths,
             observable_mean.astype(np.float64),
-            sigma=np.sqrt(observable_error.astype(np.float64)),
+            sigma=observable_error.astype(np.float64),
             absolute_sigma=True,
         )
         y_true = observable_mean
