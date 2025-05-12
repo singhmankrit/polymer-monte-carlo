@@ -89,7 +89,7 @@ def plot(
         y_true = observable_mean
         y_pred = opt_params_variable[0] * lengths ** (opt_params_variable[1])
         ss_res = np.sum((y_true - y_pred) ** 2)
-        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
+        ss_tot = np.sum((y_true - np.mean(y_true)) ** 2 / observable_error)
         r2 = 1 - ss_res / ss_tot
 
         print(f"R2 score (variable growth exp): {r2}")
