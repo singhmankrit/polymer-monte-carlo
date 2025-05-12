@@ -72,7 +72,7 @@ def plot(
         ax.plot(
             lengths,
             opt_params_fixed[0] * lengths**exp,
-            label=f"fixed exp best fit: ${opt_params_fixed[0]:.03f} L^{{{exp}}}$ / R2: {r2:.03f}",
+            label=f"fixed exp best fit: ${opt_params_fixed[0]:.03f} L^{{{exp}}}$",
             color="C1",
         )
     except RuntimeError:
@@ -96,7 +96,7 @@ def plot(
         ax.plot(
             lengths,
             opt_params_variable[0] * lengths ** (opt_params_variable[1]),
-            label=f"variable exp best fit: ${opt_params_variable[0]:.03f} L^{{{opt_params_variable[1]:.2f}}}$ / R2: {r2:.03f}",
+            label=f"variable exp best fit: ${opt_params_variable[0]:.03f} L^{{{opt_params_variable[1]:.2f}}}$",
             color="C3",
         )
     except RuntimeError:
